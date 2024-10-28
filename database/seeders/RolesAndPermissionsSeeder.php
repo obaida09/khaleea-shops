@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\shop;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -44,23 +46,37 @@ class RolesAndPermissionsSeeder extends Seeder
         foreach ($permissions as $permission) {
             Permission::create([
                 'name' => $permission,
-                'guard_name' => 'api',
+                'guard_name' => 'admin',
             ]);
         }
 
-        $admin = Role::create(['name' => 'admin', 'guard_name' => 'api']);
-        Role::create(['name' => 'supervisor', 'guard_name' => 'api']);
-        Role::create(['name' => 'user', 'guard_name' => 'api']);
+        $admin = Role::create(['name' => 'admin', 'guard_name' => 'admin']);
+        Role::create(['name' => 'supervisor', 'guard_name' => 'admin']);
+        Role::create(['name' => 'user', 'guard_name' => 'admin']);
 
         $admin->givePermissionTo(Permission::all());
 
         $user = User::factory()->create([
-            'name' => 'Khaleea',
-            'email' => 'khaleea.com',
+            'name' => 'User',
+            'email' => 'user.com',
             'mobile' => '07724389401',
             'password' => Hash::make('obeda2001'),
         ]);
 
-        $user->assignRole($admin);
+        $admin = Admin::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin.com',
+            'mobile' => '07724389402',
+            'password' => Hash::make('obeda2001'),
+        ]);
+
+        $shop = shop::factory()->create([
+            'name' => 'Khaleea',
+            'email' => 'khaleea.com',
+            'mobile' => '07724389403',
+            'password' => Hash::make('obeda2001'),
+        ]);
+
+        // $admin->assignRole($admin);
     }
 }

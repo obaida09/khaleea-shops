@@ -8,6 +8,7 @@ use App\Http\Resources\FrontEnd\OrderResource;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\shop;
 use App\Models\User;
 use App\Notifications\OrderStatusNotification;
 use Illuminate\Http\Request;
@@ -44,13 +45,18 @@ class OrderController extends Controller
         $order->user_id = Auth::id();
         $order->total_price = 0; // This will be calculated
         $order->status = 'pending'; // Example status
+
         $order->save();
 
         $totalPrice = 0;
+
         foreach ($request->products as $productData) {
             $product = Product::findOrFail($productData['id']);
             $quantity = $productData['quantity'];
-            $order->products()->attach($product->id, ['quantity' => $quantity]);
+            $order->products()->attach($product->id, [
+                'quantity' => $quantity,
+                'price' => $product->price,
+            ]);
             $totalPrice += $product->price * $quantity;
             $product->decrement('quantity', $quantity);
         }
@@ -78,6 +84,34 @@ class OrderController extends Controller
 
         return new OrderResource($order->load('products', 'coupon'));
     }
+
+
+    public function store2(StoreOrderRequest $request)
+    {
+        $shop = shop::findOrFail($request->shop_id);
+
+        $order = $shop->orders()->create();
+
+        $totalPrice = 0;
+
+        foreach ($request->products as $productData) {
+            $product = Product::findOrFail($productData['id']);
+            $quantity = $productData['quantity'];
+            $price = $product->price * $quantity;
+            $totalPrice += $price;
+
+            $order->products()->attach($product->id, [
+                'quantity' => $quantity,
+                'price' => $product->price,
+            ]);
+        }
+
+        $order->update(['total_price' => $totalPrice]);
+
+        return new OrderResource($order);
+    }
+
+
 
     public function destroy(Order $order)
     {

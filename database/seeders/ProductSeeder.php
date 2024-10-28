@@ -15,8 +15,6 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        $products = Product::factory()->count(20)->create();
-
         Product::factory(10)->create()->each(function ($product) {
             // Attach 3 random images to each product
             ProductImage::factory()->count(3)->create([

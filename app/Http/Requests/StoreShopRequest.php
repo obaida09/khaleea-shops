@@ -6,9 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\Rule;
 
-class UpdateUserRequest extends FormRequest
+class StoreShopRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,24 +25,10 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|required|string|max:255',
-            'email' => [
-                'sometimes',
-                'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique('users')->ignore($this->route('user')),
-            ],
-            'mobile' => [
-                'sometimes',
-                'required',
-                'string',
-                'numaric',
-                'max:255',
-                Rule::unique('users')->ignore($this->route('user')),
-            ],
-            'password' => 'sometimes|required|string|min:8|confirmed',
+            'name' => 'required|string|max:255',
+            'mobile' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
             'location' => 'nullable',
             'gps' => 'nullable',
         ];

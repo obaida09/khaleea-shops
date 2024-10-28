@@ -41,7 +41,17 @@ return [
             'provider' => 'users',
         ],
 
-        'api' => [
+        'admin' => [
+            'driver' => 'passport',
+            'provider' => 'admins',
+        ],
+
+        'shop' => [
+            'driver' => 'passport',
+            'provider' => 'shops',
+        ],
+
+        'user' => [
             'driver' => 'passport',
             'provider' => 'users',
         ],
@@ -70,10 +80,15 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL',  App\Models\Admin::class),
+        ],
+
+        'shops' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_MODEL',  App\Models\Shop::class),
+        ],
     ],
 
     /*

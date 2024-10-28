@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
 
-class UpdateUserRequest extends FormRequest
+class UpdateShopRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -33,7 +33,7 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->route('user')),
+                Rule::unique('shops')->ignore($this->route('shop')),
             ],
             'mobile' => [
                 'sometimes',
@@ -41,7 +41,7 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'numaric',
                 'max:255',
-                Rule::unique('users')->ignore($this->route('user')),
+                Rule::unique('shops')->ignore($this->route('shop')),
             ],
             'password' => 'sometimes|required|string|min:8|confirmed',
             'location' => 'nullable',

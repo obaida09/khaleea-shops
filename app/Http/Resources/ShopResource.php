@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\FrontEnd;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductResource extends JsonResource
+class ShopResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,14 +17,12 @@ class ProductResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'slug' => $this->slug,
-            'description' => $this->description,
-            'price' => $this->price,
-            'quantity' => $this->quantity,
-            'category' => $this->category->name,
-            'images' => $this->whenLoaded('images'),
+            'email' => $this->email,
+            'mobile' => $this->mobile,
+            'location' => $this->location,
+            'gps' => $this->gps,
             'created_at' => $this->created_at->toFormattedDateString(),
-            'posts' => PostResource::collection($this->whenLoaded('posts')),
+            'updated_at' => $this->updated_at->toFormattedDateString(),
         ];
     }
 }
