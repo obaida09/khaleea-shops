@@ -22,7 +22,7 @@ class LoginController extends Controller
 
         return response()->json([
             'token' => $token,
-            'user' => Auth::guard('api')->user(),
+            'user' => Auth::guard('user')->user(),
         ], 200);
     }
 }

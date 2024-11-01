@@ -13,7 +13,7 @@ class Product extends Model
     protected $keyType = 'string';
     public $incrementing = false;
     protected $fillable = [
-        'name', 'slug', 'description', 'price' , 'category_id', 'quantity', 'status', 'user_id'
+        'name', 'slug', 'description', 'price' , 'category_id', 'quantity', 'status', 'shop_id'
     ];
 
     protected static function boot()
@@ -34,11 +34,6 @@ class Product extends Model
     public function shop()
     {
         return $this->belongsTo(Shop::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function category()
@@ -63,16 +58,6 @@ class Product extends Model
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class)->withPivot('quantity');
-    }
-
-    public function colors()
-    {
-        return $this->belongsToMany(Color::class);
-    }
-
-    public function sizes()
-    {
-        return $this->belongsToMany(Size::class);
+        return $this->belongsToMany(Order::class, 'order_product', 'product_id', 'order_id');
     }
 }

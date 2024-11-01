@@ -5,14 +5,15 @@ namespace App\Http\Controllers\FrontEnd;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Resources\FrontEnd\OrderResource;
+use App\Models\Admin;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\shop;
 use App\Models\User;
 use App\Notifications\OrderStatusNotification;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -41,48 +42,61 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request)
     {
-        $order = new Order();
-        $order->user_id = Auth::id();
-        $order->total_price = 0; // This will be calculated
-        $order->status = 'pending'; // Example status
+        DB::beginTransaction();
 
-        $order->save();
+        try
+        {
+            $order = new Order();
+            $order->user_id = Auth::id();
+            $order->total_price = 0; // This will be calculated
+            $order->status = 'pending'; // Example status
 
-        $totalPrice = 0;
+            $order->save();
 
-        foreach ($request->products as $productData) {
-            $product = Product::findOrFail($productData['id']);
-            $quantity = $productData['quantity'];
-            $order->products()->attach($product->id, [
-                'quantity' => $quantity,
-                'price' => $product->price,
-            ]);
-            $totalPrice += $product->price * $quantity;
-            $product->decrement('quantity', $quantity);
+            $totalPrice = 0;
+
+            foreach ($request->products as $productData) {
+                $product = Product::findOrFail($productData['id']);
+                $quantity = $productData['quantity'];
+                $order->products()->attach($product->id, [
+                    'quantity' => $quantity,
+                    'price' => $product->price,
+                ]);
+                $totalPrice += $product->price * $quantity;
+                $product->decrement('quantity', $quantity);
+            }
+
+            // Update total price
+            $order->total_price = $totalPrice;
+
+            // Apply coupon if provided
+            if ($request->filled('coupon_code')) {
+                $coupon = Coupon::where('code', $request->coupon_code)->first();
+                $order->applyCoupon($coupon);
+            }
+
+            $order->save();
+
+            // Find all admins with the 'view-orders' permission
+            $admins = Admin::permission('view-orders')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new OrderStatusNotification($order, 'created'));
+            }
+
+            // Notify the user about the new order
+            $user = auth()->user();
+            $user->notify(new OrderStatusNotification($order, 'created'));
+
+            // Commit the transaction
+            DB::commit();
+            return new OrderResource($order->load('products', 'coupon'));
         }
-
-        // Update total price
-        $order->total_price = $totalPrice;
-
-        // Apply coupon if provided
-        if ($request->filled('coupon_code')) {
-            $coupon = Coupon::where('code', $request->coupon_code)->first();
-            $order->applyCoupon($coupon);
+        catch (\Exception $e) 
+        {
+            // Rollback the transaction if something goes wrong
+            DB::rollBack();
+            return response()->json(['error' => 'Failed to create order: ' . $e->getMessage()], 500);
         }
-
-        $order->save();
-
-        // Find all admins with the 'view-orders' permission
-        $admins = User::permission('view-orders')->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new OrderStatusNotification($order, 'created'));
-        }
-
-        // Notify the user about the new order
-        $user = auth()->user();
-        $user->notify(new OrderStatusNotification($order, 'created'));
-
-        return new OrderResource($order->load('products', 'coupon'));
     }
 
 

@@ -15,9 +15,14 @@ class OrderController extends Controller
         $sortField = $request->input('sort_by', 'id'); // Default sort by 'id'
         $sortOrder = $request->input('sort_order', 'asc'); // Default order 'asc'
 
-        $query = Order::query();
-return Auth::guard('shop')->user()->orders;
-        $order = Auth::guard('shop')->user()->orders()->orderBy($sortField, $sortOrder)->paginate(10);
-        return OrderResource::collection($order);
+        $shop = Auth::guard('shop')->user();
+
+        // Retrieve all orders for products associated with the authenticated shop
+        $orders = Order::whereHas('products', function ($query) use ($shop) {
+            $query->where('shop_id', $shop->id);
+        })->distinct()->orderBy($sortField, $sortOrder)->paginate(10);
+
+        return $orders;
+        return OrderResource::collection($orders);
     }
 }

@@ -28,8 +28,10 @@ class OrderResource extends JsonResource
         ];
 
         // Add products only for the show endpoint
-        if ($request->is('api/user/order/*')) {
+        if ($request->is('api/shop/order/*')) {
             $baseResponse['products'] = ProductResource::collection($this->products);
         }
+
+        return $baseResponse;
     }
 }

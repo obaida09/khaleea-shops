@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\ShopSide;
 
+use App\Http\Resources\ShopSide\OrderResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,6 +26,7 @@ class ProductResource extends JsonResource
             'images' => $this->whenLoaded('images'),
             'created_at' => $this->created_at->toFormattedDateString(),
             'posts' => PostResource::collection($this->whenLoaded('posts')),
+            'orders' => OrderResource::collection($this->whenLoaded('orders')),
         ];
     }
 }

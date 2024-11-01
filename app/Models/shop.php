@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Str;
 
@@ -47,7 +46,7 @@ class shop extends Authenticatable
 
     public function Orders()
     {
-        return $this->hasManyThrough(Order::class, Product::class)
+        return $this->hasManyThrough(Order::class, Product::class, 'shop_id', 'product_id', 'id', 'id')
             ->distinct(); // Ensures unique orders
     }
 }
