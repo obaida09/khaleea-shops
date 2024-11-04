@@ -1,20 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\FrontEnd;
+namespace App\Http\Controllers\ShopSide;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\user\UpdateProfileRequest;
-use App\Http\Resources\FrontEnd\OrderResource;
-use App\Http\Resources\UserResource;
-use App\Models\Order;
+use App\Http\Requests\shop\UpdateProfileRequest;
+use App\Http\Resources\ShopSide\ShopResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class UserDetailsController extends Controller
+class ShopDetailsController extends Controller
 {
     public function profile()
     {
-       $user = new UserResource(Auth::user());
-       return $user;
+       $shop = new ShopResource(Auth::user());
+       return $shop;
     }
 
     public function updateProfile(UpdateProfileRequest $request)
@@ -27,7 +26,7 @@ class UserDetailsController extends Controller
         $user->update($data);
 
         return response()->json([
-            'data' => new UserResource($user),
+            'data' => new ShopResource($user),
             'message' => 'User Updated',
         ], 201);
     }

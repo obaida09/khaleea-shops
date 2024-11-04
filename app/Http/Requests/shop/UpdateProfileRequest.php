@@ -33,7 +33,7 @@ class UpdateProfileRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('shops')->ignore($this->route('user')),
+                Rule::unique('shops')->ignore($this->route('shop')),
             ],
             'mobile' => [
                 'sometimes',
@@ -41,7 +41,7 @@ class UpdateProfileRequest extends FormRequest
                 'string',
                 'numaric',
                 'max:255',
-                Rule::unique('shops')->ignore($this->route('user')),
+                Rule::unique('shops')->ignore($this->route('shop')),
             ],
             'password' => 'sometimes|required|string|min:8',
             'season' => 'sometimes|in:winter,summer,all',

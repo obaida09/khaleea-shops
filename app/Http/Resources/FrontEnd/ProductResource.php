@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\FrontEnd;
 
+use App\Http\Resources\ShopSide\ShopResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,13 +19,16 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'description' => $this->description,
-            'price' => $this->price,
-            'quantity' => $this->quantity,
-            'category' => $this->category->name,
-            'images' => $this->whenLoaded('images'),
-            'created_at' => $this->created_at->toFormattedDateString(),
-            'posts' => PostResource::collection($this->whenLoaded('posts')),
+            // 'description' => $this->description,
+            // 'price' => $this->price,
+            // 'quantity' => $this->quantity,
+            // 'shop_id' => $this->shop->id,
+            // 'shop_name' => $this->shop->name,
+            // 'category_id' => $this->category->id,
+            // 'category_name' => $this->category->name,
+            // 'created_at' => $this->created_at->toFormattedDateString(),
+            // 'images' => $this->whenLoaded('images'),
+            // 'posts' => PostResource::collection($this->whenLoaded('posts')),
         ];
     }
 }

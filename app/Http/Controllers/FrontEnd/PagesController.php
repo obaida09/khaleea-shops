@@ -4,9 +4,10 @@ namespace App\Http\Controllers\FrontEnd;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
-use App\Http\Resources\ProductResource;
+use App\Http\Resources\FrontEnd\ProductResource;
 use App\Models\Post;
 use App\Models\Product;
+use App\Models\shop;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
@@ -14,11 +15,12 @@ class PagesController extends Controller
     public function vertical(Request $request)
     {
         // Define total count you want to retrieve per request
-        $totalCount = 27; // Adjust as needed
+        $totalCount = 15; // Adjust as needed
 
         // Calculate how many posts and products to retrieve
         $postsCount = (int) ($totalCount * 0.1); // 10%
-        $productsCount = (int) ($totalCount * 0.9); // 90%
+        $productsCount = (int) ($totalCount * 0.6); // 60%
+        $productsFromeKhaleea = (int) ($totalCount * 0.3); // 30%
 
         // Get the current page from the request (defaults to 1)
         $currentPage = $request->get('page', 1);
@@ -26,21 +28,46 @@ class PagesController extends Controller
         // Calculate the offset for pagination
         $offsetPosts = ($currentPage - 1) * $postsCount;
         $offsetProducts = ($currentPage - 1) * $productsCount;
+        $offsetProductsFromKhaleea = ($currentPage - 1) * $productsFromeKhaleea;
 
         // Fetch posts and products
         $posts = Post::with('user')->whereNull('product_id')->skip($offsetPosts)->take($postsCount)->get();
-        $products = Product::with('user', 'colors', 'sizes', 'images')->skip($offsetProducts)->take($productsCount)->get();
+
+        $khaleeaShop = shop::whereName('khaleea')->first();
+        $productsFromKhaleea = Product::where('shop_id', $khaleeaShop->id)
+            ->whereIn('season', [$khaleeaShop->season, 'all'])
+            ->with('images')
+            ->skip($offsetProductsFromKhaleea)
+            ->take($productsFromeKhaleea)
+            ->get();
+
+        $products = Product::join('shops', 'products.shop_id', '=', 'shops.id')
+            ->where(function ($query) {
+                $query->whereColumn('products.season', 'shops.season')
+                    ->orWhere('products.season', 'all');
+                    // ->orWhere('shops.season', 'all');
+            })
+            ->where('shop_id', '<>', $khaleeaShop->id)
+            ->with('images')
+            ->skip($offsetProducts)
+            ->take($productsCount)
+            ->get();
 
         $posts = PostResource::collection($posts);
         $products = ProductResource::collection($products);
 
-        // Combine the results and shuffle
-        $mixedData = $posts->concat($products)->shuffle();
+        // Combine the results into a single collection
+        $concatProducts = $productsFromKhaleea
+            ->concat($products)
+            ->concat($posts);
+
+        // shuffle
+        $mixedData = $concatProducts->shuffle();
 
         return response()->json($mixedData);
     }
 
-    public function horizontal (Request $request)
+    public function horizontal(Request $request)
     {
         // Define total count of posts you want to retrieve per request
         $totalCount = 10; // Adjust as needed

@@ -24,6 +24,20 @@ class Product extends Model
         });
     }
 
+    public function getProductsByPreferredSeasons()
+    {
+        $products = Product::join('shops', 'products.shop_id', '=', 'shops.id')
+            ->where(function ($query) {
+                $query->whereColumn('products.season', 'shops.season')
+                    ->orWhere('products.season', 'all')
+                    ->orWhere('shops.season', 'all');
+            })
+            ->select('products.*')
+            ->get();
+
+        return response()->json($products);
+    }
+
     public function status()
     {
         return $this->status ? 1 : 0;
