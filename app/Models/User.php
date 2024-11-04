@@ -59,6 +59,16 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function savedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'post_user')->withTimestamps();
+    }
+
+    public function savedProducts()
+    {
+        return $this->belongsToMany(Product::class, 'product_user')->withTimestamps();
+    }
+
     public function orders()
     {
         return $this->hasMany(Order::class);

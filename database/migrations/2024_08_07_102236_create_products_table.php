@@ -18,12 +18,13 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->decimal('price', 10, 2);
             $table->unsignedBigInteger('quantity')->default(0);
+            $table->enum('season', ['winter', 'summer', 'all'])->default('all');
             $table->boolean('status')->default(true);
             $table->timestamps();
             $table->uuid('shop_id');
             $table->uuid('category_id');
 
-            // Foreign key constraints
+            // Foreign key constraintse
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });

@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Str;
+use Illuminate\Notifications\Notifiable;
 
 class shop extends Authenticatable
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, HasApiTokens, Notifiable;
 
     protected $guarded = [];
     protected $keyType = 'string';
@@ -39,14 +40,15 @@ class shop extends Authenticatable
         return $this->hasMany(Product::class);
     }
 
-    // public function orders()
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    // public function Orders()
     // {
-    //     return $this->hasMany(Order::class);
+    //     return $this->hasManyThrough(Order::class, Product::class, 'shop_id', 'product_id', 'id', 'id')
+    //         ->distinct(); // Ensures unique orders
     // }
 
-    public function Orders()
-    {
-        return $this->hasManyThrough(Order::class, Product::class, 'shop_id', 'product_id', 'id', 'id')
-            ->distinct(); // Ensures unique orders
-    }
 }

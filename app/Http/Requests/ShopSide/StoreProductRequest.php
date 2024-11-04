@@ -22,11 +22,12 @@ class StoreProductRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(): array 
     {
         return [
             'name' => 'required|string|max:255|unique:products,name',
             'description' => 'nullable|string',
+            'season' => 'required|in:winter,summer,all',
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|numeric',
             'category_id' => 'required|uuid|exists:categories,id',

@@ -10,11 +10,9 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
     protected $keyType = 'string';
     public $incrementing = false;
-    protected $fillable = [
-        'name', 'slug', 'description', 'price' , 'category_id', 'quantity', 'status', 'shop_id'
-    ];
 
     protected static function boot()
     {
@@ -59,5 +57,10 @@ class Product extends Model
     public function orders()
     {
         return $this->belongsToMany(Order::class, 'order_product', 'product_id', 'order_id');
+    }
+
+    public function savedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'product_user')->withTimestamps();
     }
 }

@@ -44,6 +44,7 @@ class UpdateProfileRequest extends FormRequest
                 Rule::unique('shops')->ignore($this->route('user')),
             ],
             'password' => 'sometimes|required|string|min:8',
+            'season' => 'sometimes|in:winter,summer,all',
             'location' => 'nullable',
             'gps' => 'nullable',
         ];

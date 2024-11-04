@@ -39,8 +39,12 @@ class StoreOrderRequest extends FormRequest
             foreach ($this->products as $productData) {
                 $product = Product::find($productData['id']);
 
-                if ($product->quantity < $productData['quantity']) {
-                    $validator->errors()->add('products.' . $productData['id'], 'The product "' . $product->name . '" has insufficient stock. You can’t buy more than ' . $product->quantity . ' units.');
+                if(!isset($product->quantity))
+                {
+                    $validator->errors()->add('products', ' The product has insufficient stock. You can’t buy more than 0 units.');
+                }
+                elseif ($product->quantity < $productData['quantity']) {
+                    $validator->errors()->add('products', ' The product "' . $product->name . '" has insufficient stock. You can’t buy more than ' . $product->quantity . ' units.');
                 }
             }
         });

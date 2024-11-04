@@ -19,12 +19,13 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(), // Custom method or string
-            'slug' => $this->faker->randomFloat(2, 10, 1000), // Price between 10 and 1000
+            'name' => $this->faker->unique()->words(3, true), // Custom method or string
             'shop_id' => shop::first()->id,
             'category_id' => Category::first()->id,
+            'quantity' => rand(20,200),
             'description' => $this->faker->text(200),
             'price' => $this->faker->randomFloat(2, 10, 1000),
         ];
     }
 }
+

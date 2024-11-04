@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\RoleController;
 Route::group(['middleware' => ['auth:admin']], function () {
 
     Route::apiResource('admin/roles', Admin\RoleController::class);
+    Route::apiResource('admin/admins', Admin\AdminController::class);
     Route::apiResource('admin/users', Admin\UserController::class);
     Route::apiResource('admin/shops', Admin\ShopController::class);
     Route::apiResource('admin/categories', Admin\CategoryController::class);
@@ -19,5 +20,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('admin/posts', Admin\PostController::class);
 
     Route::get('/permissions', [RoleController::class, 'getPermissions']);
-    Route::post('/users/{user}/points/add', [Admin\PointController::class, 'addPoints']);
+    // Route::post('/users/{user}/points/add', [Admin\PointController::class, 'addPoints']);
+    Route::post('/admin/send-message-to-stores', [Admin\NotificationsController::class, 'sendMessageToStores']);
+    Route::post('/admin/send-message-to-users', [Admin\NotificationsController::class, 'sendMessageToUsers']);
 });

@@ -7,10 +7,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Str;
+use Illuminate\Notifications\Notifiable;
 
 class Admin extends Authenticatable
 {
-    use HasFactory, HasApiTokens, HasRoles;
+    use HasFactory, HasApiTokens, HasRoles, Notifiable;
 
     protected $guarded = [];
     protected $keyType = 'string';

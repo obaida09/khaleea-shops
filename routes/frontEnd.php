@@ -24,6 +24,15 @@ Route::group(['middleware' => ['auth:user']], function () {
     Route::post('/posts/comments', [FrontEnd\CommentController::class, 'store']);
     // Delete a comment or reply
     Route::delete('/comments/{comment}', [FrontEnd\CommentController::class, 'destroy']);
+
+
+    Route::post('user/products/{productId}/save', [FrontEnd\ProductController::class, 'saveProduct']);
+    Route::delete('user/products/{productId}/unsave', [FrontEnd\ProductController::class, 'unsaveProduct']);
+    Route::get('user/saved-products', [FrontEnd\ProductController::class, 'getSavedProducts']);
+
+    Route::post('user/posts/{postId}/save', [FrontEnd\PostController::class, 'savePost']);
+    Route::delete('user/posts/{postId}/unsave', [FrontEnd\PostController::class, 'unsavePost']);
+    Route::get('user/saved-posts', [FrontEnd\PostController::class, 'getSavedPosts']);
 });
 
 Route::get('/verticalPage', [FrontEnd\PagesController::class, 'vertical']);

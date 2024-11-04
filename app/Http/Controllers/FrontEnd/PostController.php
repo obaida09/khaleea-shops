@@ -100,4 +100,28 @@ class PostController extends Controller
         $user->notify(new PostNotification($post, 'deleted'));
         return response()->json(['message' => 'Post deleted successfully']);
     }
+
+    public function savePost(Request $request, $postId)
+    {
+        $user = Auth::guard('user')->user();
+        $post = Post::findOrFail($postId);
+
+        // Attach the post to the user’s saved posts if not already saved
+        if (!$user->savedPosts()->where('post_id', $post->id)->exists()) {
+            $user->savedPosts()->attach($post);
+        }
+
+        return response()->json(['message' => 'Post saved successfully.']);
+    }
+
+    public function unsavePost(Request $request, $postId)
+    {
+        $user =  Auth::guard('user')->user();
+        $post = Post::findOrFail($postId);
+
+        // Detach the post from the user’s saved posts if saved
+        $user->savedPosts()->detach($post);
+
+        return response()->json(['message' => 'Post unsaved successfully.']);
+    }
 }

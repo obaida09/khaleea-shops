@@ -42,56 +42,75 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request)
     {
+
+        // Group products by store
+        $groupedProducts = collect($request->products)->groupBy(function ($productData) {
+            $product = Product::find($productData['id']);
+            return $product->shop_id;
+        });
+
+
         DB::beginTransaction();
 
         try
         {
-            $order = new Order();
-            $order->user_id = Auth::id();
-            $order->total_price = 0; // This will be calculated
-            $order->status = 'pending'; // Example status
+            $orders = [];
 
-            $order->save();
+            foreach ($groupedProducts as $shopId => $products) {
 
-            $totalPrice = 0;
+                $order = new Order();
+                $order->shop_id = $shopId; // Link the order to the store
+                $order->user_id = Auth::id();
+                $order->total_price = 0; // This will be calculated
+                $order->status = 'pending'; // Example status
 
-            foreach ($request->products as $productData) {
-                $product = Product::findOrFail($productData['id']);
-                $quantity = $productData['quantity'];
-                $order->products()->attach($product->id, [
-                    'quantity' => $quantity,
-                    'price' => $product->price,
-                ]);
-                $totalPrice += $product->price * $quantity;
-                $product->decrement('quantity', $quantity);
+                $order->save();
+
+                $totalPrice = 0;
+
+                foreach ($products  as $productData) {
+                    $product = Product::findOrFail($productData['id']);
+                    $quantity = $productData['quantity'];
+                    $order->products()->attach($product->id, [
+                        'quantity' => $quantity,
+                        'price' => $product->price,
+                    ]);
+                    $totalPrice += $product->price * $quantity;
+                    $product->decrement('quantity', $quantity);
+                }
+
+                // Update total price
+                $order->total_price = $totalPrice;
+
+                // Apply coupon if provided
+                if ($request->filled('coupon_code')) {
+                    $coupon = Coupon::where('code', $request->coupon_code)->first();
+                    $order->applyCoupon($coupon);
+                }
+
+                $order->save();
+                $orders[] = $order; // Add to the response array
+
+                // Find all admins with the 'view-orders' permission
+                $admins = Admin::permission('view-orders')->get();
+                foreach ($admins as $admin) {
+                    $admin->notify(new OrderStatusNotification($order, 'created'));
+                }
+
+                // Notify the user about the new order
+                $user = auth()->user();
+                $user->notify(new OrderStatusNotification($order, 'created'));
             }
-
-            // Update total price
-            $order->total_price = $totalPrice;
-
-            // Apply coupon if provided
-            if ($request->filled('coupon_code')) {
-                $coupon = Coupon::where('code', $request->coupon_code)->first();
-                $order->applyCoupon($coupon);
-            }
-
-            $order->save();
-
-            // Find all admins with the 'view-orders' permission
-            $admins = Admin::permission('view-orders')->get();
-            foreach ($admins as $admin) {
-                $admin->notify(new OrderStatusNotification($order, 'created'));
-            }
-
-            // Notify the user about the new order
-            $user = auth()->user();
-            $user->notify(new OrderStatusNotification($order, 'created'));
 
             // Commit the transaction
             DB::commit();
-            return new OrderResource($order->load('products', 'coupon'));
+
+            return response()->json([
+                'message' => 'Orders created successfully!',
+                'orders' => OrderResource::collection($orders)
+            ], 201);
         }
-        catch (\Exception $e) 
+        catch (\Exception $e)
         {
             // Rollback the transaction if something goes wrong
             DB::rollBack();

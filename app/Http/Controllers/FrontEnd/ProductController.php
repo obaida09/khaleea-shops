@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\FrontEnd\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -45,5 +46,29 @@ class ProductController extends Controller
             'product' => new ProductResource($product),
             'related_products' => $randomizedProducts,
         ]);
+    }
+
+    public function saveProduct(Request $request, $productId)
+    {
+        $user =  Auth::guard('user')->user();
+        $product = Product::findOrFail($productId);
+
+        // Attach the product to the user’s saved products if not already saved
+        if (!$user->savedProducts()->where('product_id', $product->id)->exists()) {
+            $user->savedProducts()->attach($product);
+        }
+
+        return response()->json(['message' => 'Product saved successfully.']);
+    }
+
+    public function unsaveProduct(Request $request, $productId)
+    {
+        $user =  Auth::guard('user')->user();
+        $product = Product::findOrFail($productId);
+
+        // Detach the product from the user’s saved products if saved
+        $user->savedProducts()->detach($product);
+
+        return response()->json(['message' => 'Product unsaved successfully.']);
     }
 }

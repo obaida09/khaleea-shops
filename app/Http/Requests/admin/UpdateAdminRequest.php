@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Requests\ShopSide;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rule;
 
-class UpdateProductRequest extends FormRequest
+class UpdateAdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,13 +26,26 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|string|min:3|max:255|unique:products,name,' . $this->product->id,
-            'description' => 'nullable|string',
-            'season' => 'sometimes|in:winter,summer,all',
-            'price' => 'sometimes|numeric|min:0',
-            'category_id' => 'sometimes|numeric',
-            'quantity' => 'sometimes|numeric',
-            'status' => 'sometimes|numeric',
+            'name' => 'sometimes|required|string|max:255',
+            'email' => [
+                'sometimes',
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('admins')->ignore($this->route('admin')),
+            ],
+            'mobile' => [
+                'sometimes',
+                'required',
+                'string',
+                'numaric',
+                'max:255',
+                Rule::unique('admins')->ignore($this->route('admin')),
+            ],
+            'password' => 'sometimes|required|string|min:8',
+            'location' => 'nullable',
+            'gps' => 'nullable',
         ];
     }
 

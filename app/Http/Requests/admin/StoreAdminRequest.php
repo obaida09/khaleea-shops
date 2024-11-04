@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\ShopSide;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Contracts\Validation\Validator;
 
-class UpdateProductRequest extends FormRequest
+class StoreAdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,16 @@ class UpdateProductRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|string|min:3|max:255|unique:products,name,' . $this->product->id,
-            'description' => 'nullable|string',
-            'season' => 'sometimes|in:winter,summer,all',
-            'price' => 'sometimes|numeric|min:0',
-            'category_id' => 'sometimes|numeric',
-            'quantity' => 'sometimes|numeric',
-            'status' => 'sometimes|numeric',
+            'name' => 'required|string|max:255',
+            'mobile' => 'required|string|max:255|unique:admins',
+            'email' => 'required|string|email|max:255|unique:admins',
+            'password' => 'required|string|min:8',
+            'location' => 'nullable',
+            'gps' => 'nullable',
         ];
     }
 

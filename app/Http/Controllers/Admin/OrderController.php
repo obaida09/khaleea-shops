@@ -8,6 +8,7 @@ use App\Http\Resources\OrderResource;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
+use App\Notifications\OrderStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -45,8 +46,18 @@ class OrderController extends Controller implements HasMiddleware
     public function update(Request $request, string $id)
     {
         $order = Auth::user()->orders()->findOrFail($id);
-        $order->status = $request->status;
-        $order->save();
+        $newStatus = $request->input('status');
+
+        if ($order->status !== $newStatus)
+        {
+            $order->status = $newStatus;
+            $order->save();
+
+            // Send notification to the user about the status change
+            $order->user->notify(new OrderStatusNotification($order, $newStatus));
+        }
+
+
 
         return new OrderResource($order);
     }
