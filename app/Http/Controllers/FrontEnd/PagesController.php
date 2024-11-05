@@ -15,12 +15,12 @@ class PagesController extends Controller
     public function vertical(Request $request)
     {
         // Define total count you want to retrieve per request
-        $totalCount = 15; // Adjust as needed
+        $totalCount = 10; // Adjust as needed
 
         // Calculate how many posts and products to retrieve
         $postsCount = (int) ($totalCount * 0.1); // 10%
         $productsCount = (int) ($totalCount * 0.6); // 60%
-        $productsFromeKhaleea = (int) ($totalCount * 0.3); // 30%
+        $productsFromKhaleea = (int) ($totalCount * 0.3); // 30%
 
         // Get the current page from the request (defaults to 1)
         $currentPage = $request->get('page', 1);
@@ -28,7 +28,7 @@ class PagesController extends Controller
         // Calculate the offset for pagination
         $offsetPosts = ($currentPage - 1) * $postsCount;
         $offsetProducts = ($currentPage - 1) * $productsCount;
-        $offsetProductsFromKhaleea = ($currentPage - 1) * $productsFromeKhaleea;
+        $offsetProductsFromKhaleea = ($currentPage - 1) * $productsFromKhaleea;
 
         // Fetch posts and products
         $posts = Post::with('user')->whereNull('product_id')->skip($offsetPosts)->take($postsCount)->get();
@@ -38,7 +38,7 @@ class PagesController extends Controller
             ->whereIn('season', [$khaleeaShop->season, 'all'])
             ->with('images')
             ->skip($offsetProductsFromKhaleea)
-            ->take($productsFromeKhaleea)
+            ->take($productsFromKhaleea)
             ->get();
 
         $products = Product::join('shops', 'products.shop_id', '=', 'shops.id')

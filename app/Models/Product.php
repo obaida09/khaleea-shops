@@ -24,6 +24,28 @@ class Product extends Model
         });
     }
 
+    public function discount()
+    {
+        return $this->hasOne(ProductDiscount::class)->whereNull('product_id')
+            ->orWhere('product_id', $this->id)
+            ->where(function ($query) {
+                $query->whereNull('end_date')
+                    ->orWhere('end_date', '>', now());
+            });
+    }
+
+    public function getDiscountedPriceAttribute()
+    {
+        $discount = $this->discount;
+        $price = $this->price;
+
+        if ($discount) {
+            $price -= ($price * $discount->percentage) / 100;
+        }
+
+        return max($price, 0);
+    }
+
     public function getProductsByPreferredSeasons()
     {
         $products = Product::join('shops', 'products.shop_id', '=', 'shops.id')
@@ -76,5 +98,16 @@ class Product extends Model
     public function savedByUsers()
     {
         return $this->belongsToMany(User::class, 'product_user')->withTimestamps();
+    }
+
+    public function ratings()
+    {
+        return $this->hasMany(ProductRating::class);
+    }
+
+    // Method to calculate the average rating
+    public function averageRating()
+    {
+        return $this->ratings()->avg('rating');
     }
 }

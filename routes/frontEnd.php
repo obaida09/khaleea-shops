@@ -33,6 +33,12 @@ Route::group(['middleware' => ['auth:user']], function () {
     Route::post('user/posts/{postId}/save', [FrontEnd\PostController::class, 'savePost']);
     Route::delete('user/posts/{postId}/unsave', [FrontEnd\PostController::class, 'unsavePost']);
     Route::get('user/saved-posts', [FrontEnd\PostController::class, 'getSavedPosts']);
+
+    Route::post('user/product/{productId}/rate', [FrontEnd\ProductController::class, 'rateProduct']);
+    Route::get('user/product/{productId}/ratings', [FrontEnd\ProductController::class, 'showProductRatings']);
+
+    Route::post('user/product/discounts/apply', [FrontEnd\ProductController::class, 'applyDiscount']);
+
 });
 
 Route::get('/verticalPage', [FrontEnd\PagesController::class, 'vertical']);

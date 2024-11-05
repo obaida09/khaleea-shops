@@ -45,10 +45,8 @@ class shop extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    // public function Orders()
-    // {
-    //     return $this->hasManyThrough(Order::class, Product::class, 'shop_id', 'product_id', 'id', 'id')
-    //         ->distinct(); // Ensures unique orders
-    // }
-
+    public function productDiscount()
+    {
+        return $this->hasMany(ProductDiscount::class);
+    }
 }

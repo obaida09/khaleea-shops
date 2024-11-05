@@ -5,6 +5,8 @@ namespace App\Http\Controllers\FrontEnd;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FrontEnd\ProductResource;
 use App\Models\Product;
+use App\Models\ProductDiscount;
+use App\Models\ProductRating;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -70,5 +72,56 @@ class ProductController extends Controller
         $user->savedProducts()->detach($product);
 
         return response()->json(['message' => 'Product unsaved successfully.']);
+    }
+
+    public function rateProduct(Request $request, $productId)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        $product = Product::findOrFail($productId);
+
+        $rating = new ProductRating([
+            'user_id' => Auth::guard('user')->user()->id,
+            'rating' => $request->input('rating'),
+            'review' => $request->input('review'),
+        ]);
+
+        $product->ratings()->save($rating);
+
+        return response()->json(['message' => 'Rating submitted successfully.'], 201);
+    }
+
+    public function showProductRatings($productId)
+    {
+        $product = Product::with('ratings.user')->findOrFail($productId);
+        $averageRating = $product->averageRating();
+
+        return response()->json([
+            'product' => $product,
+            'average_rating' => $averageRating,
+            'ratings' => $product->ratings,
+        ]);
+    }
+
+    public function applyDiscount(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'nullable|exists:products,id',
+            'percentage' => 'nullable|numeric|min:0|max:100',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $discount = ProductDiscount::updateOrCreate(
+            [
+                'shop_id' => Auth::guard('shop')->user()->id,
+                'product_id' => $request->product_id,
+            ],
+            $request->only(['percentage', 'fixed_amount', 'start_date', 'end_date'])
+        );
+
+        return response()->json(['message' => 'Discount applied successfully.', 'discount' => $discount], 200);
     }
 }

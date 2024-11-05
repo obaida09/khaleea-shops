@@ -47,13 +47,14 @@ class ProductController extends Controller
         $validated = $request->validated();
         $validated['shop_id'] = Auth::guard('shop')->user()->id;
         unset($validated['images']);
+        return $request->all();
 
         $product = Product::create($validated);
 
         // Handle multiple images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $imagePath = $image->store('products', 'public');
+                $imagePath = $image->storeAs('products',  uniqid() . '_' . $file->getClientOriginalName(),'public');
                 ProductImage::create([
                     'product_id' => $product->id,
                     'image_path' => $imagePath,
