@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\shop>
  */
-class ShopFactory extends Factory
+class shopFactory extends Factory
 {
     protected static ?string $password;
 
