@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Admin;
 use App\Models\Permission;
 use App\Models\Role;
-use App\Models\shop;
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -70,7 +70,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'password' => Hash::make('obeda2001'),
         ]);
 
-        $shop = shop::factory()->create([
+        $shop = Shop::factory()->create([
             'name' => 'Khaleea',
             'email' => 'khaleea.com',
             'mobile' => '07724389403',
