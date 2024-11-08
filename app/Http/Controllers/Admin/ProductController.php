@@ -88,7 +88,7 @@ class ProductController extends Controller implements HasMiddleware
      */
     public function show(Product $product)
     {
-        $product->load(['user', 'colors', 'sizes', 'images']);
+        $product->load(['user', 'images']);
         return new ProductResource($product);
     }
 

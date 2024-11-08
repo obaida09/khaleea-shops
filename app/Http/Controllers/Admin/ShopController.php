@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
 use App\Http\Resources\ShopResource;
-use App\Models\shop;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -28,7 +28,7 @@ class ShopController extends Controller implements HasMiddleware
         $sortField = $request->input('sort_by', 'id'); // Default sort by 'id'
         $sortOrder = $request->input('sort_order', 'asc'); // Default order 'asc'
 
-        $query = shop::query();
+        $query = Shop::query();
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');

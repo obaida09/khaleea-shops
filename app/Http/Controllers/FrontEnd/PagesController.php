@@ -7,7 +7,7 @@ use App\Http\Resources\PostResource;
 use App\Http\Resources\FrontEnd\ProductResource;
 use App\Models\Post;
 use App\Models\Product;
-use App\Models\shop;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
@@ -33,7 +33,7 @@ class PagesController extends Controller
         // Fetch posts and products
         $posts = Post::with('user')->whereNull('product_id')->skip($offsetPosts)->take($postsCount)->get();
 
-        $khaleeaShop = shop::whereName('khaleea')->first();
+        $khaleeaShop = Shop::whereName('khaleea')->first();
         $productsFromKhaleea = Product::where('shop_id', $khaleeaShop->id)
             ->whereIn('season', [$khaleeaShop->season, 'all'])
             ->with('images')

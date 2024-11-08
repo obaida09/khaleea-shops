@@ -8,7 +8,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Str;
 use Illuminate\Notifications\Notifiable;
 
-class shop extends Authenticatable
+class Shop extends Authenticatable
 {
     use HasFactory, HasApiTokens, Notifiable;
 

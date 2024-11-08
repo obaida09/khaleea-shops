@@ -9,7 +9,7 @@ use App\Models\Admin;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\shop;
+use App\Models\Shop;
 use App\Models\User;
 use App\Notifications\OrderStatusNotification;
 use Illuminate\Support\Facades\Auth;
@@ -121,7 +121,7 @@ class OrderController extends Controller
 
     public function store2(StoreOrderRequest $request)
     {
-        $shop = shop::findOrFail($request->shop_id);
+        $shop = Shop::findOrFail($request->shop_id);
 
         $order = $shop->orders()->create();
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\shop;
+use App\Models\Shop;
 use App\Models\User;
 use App\Notifications\Admin\StoreGroupMessage;
 use App\Notifications\Admin\UserGroupMessage;
