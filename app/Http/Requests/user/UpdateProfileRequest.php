@@ -75,7 +75,7 @@ class UpdateProfileRequest extends FormRequest
             'email.unique' => 'البريد الإلكتروني مسجل بالفعل.',
             'password.required' => 'حقل كلمة المرور مطلوب.',
             'password.string' => 'يجب أن تكون كلمة المرور نصية.',
-            'password.min' => 'يجب ألا تقل كلمة المرور عن 8 أحرف.',
+            'password.min' => 'يجب ألا تقل كلمة المرور عن 8 أحرف.'
         ];
     }
 }
