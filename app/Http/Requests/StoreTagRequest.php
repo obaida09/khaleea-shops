@@ -37,4 +37,14 @@ class StoreTagRequest extends FormRequest
             'errors' => $validator->errors(),
         ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'حقل الاسم مطلوب.',
+            'name.string' => 'يجب أن يكون الاسم نصيًا.',
+            'name.max' => 'يجب ألا يزيد الاسم عن 255 حرفًا.',
+            'name.unique' => 'هذا الاسم موجود بالفعل بين العلامات.',
+        ];
+    }
 }

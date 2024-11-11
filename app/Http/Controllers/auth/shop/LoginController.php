@@ -4,6 +4,7 @@ namespace App\Http\Controllers\auth\shop;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\shop\LoginRequest;
+use App\Http\Resources\ShopSide\ShopResource;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -14,14 +15,17 @@ class LoginController extends Controller
     {
         $credentials = $request->only('mobile', 'password');
 
-        $admin = Shop::where('mobile', $credentials['mobile'])->first();
+        $shop = Shop::where('mobile', $credentials['mobile'])->first();
 
-        if (!$admin || !Hash::check($credentials['password'], $admin->password)) {
+        if (!$shop || !Hash::check($credentials['password'], $shop->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $token = $admin->createToken('Admin API Token')->accessToken;
+        $token = $shop->createToken('Admin API Token')->accessToken;
 
-        return response()->json(['token' => $token], 200);
+        return response()->json([
+            'token' => $token,
+            'shop' => new ShopResource($shop)
+        ], 200);
     }
 }

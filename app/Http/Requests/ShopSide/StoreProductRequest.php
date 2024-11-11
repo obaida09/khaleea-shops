@@ -22,7 +22,7 @@ class StoreProductRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array 
+    public function rules(): array
     {
         return [
             'name' => 'required|string|max:255|unique:products,name',
@@ -43,5 +43,32 @@ class StoreProductRequest extends FormRequest
             'message' => 'Validation failed',
             'errors' => $validator->errors(),
         ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'حقل الاسم مطلوب.',
+            'name.string' => 'يجب أن يكون الاسم نصيًا.',
+            'name.max' => 'يجب ألا يزيد الاسم عن 255 حرفًا.',
+            'name.unique' => 'اسم المنتج مستخدم بالفعل.',
+            'description.string' => 'يجب أن يكون الوصف نصيًا.',
+            'season.required' => 'حقل الموسم مطلوب.',
+            'season.in' => 'يجب أن يكون الموسم "شتاء"، "صيف"، أو "كل الفصول".',
+            'price.required' => 'حقل السعر مطلوب.',
+            'price.numeric' => 'يجب أن يكون السعر رقمًا.',
+            'price.min' => 'يجب أن يكون السعر قيمة موجبة.',
+            'quantity.required' => 'حقل الكمية مطلوب.',
+            'quantity.numeric' => 'يجب أن تكون الكمية رقمًا.',
+            'category_id.required' => 'حقل الفئة مطلوب.',
+            'category_id.uuid' => 'يجب أن يكون معرف الفئة UUID صحيحًا.',
+            'category_id.exists' => 'الفئة المحددة غير موجودة.',
+            'status.required' => 'حقل الحالة مطلوب.',
+            'status.numeric' => 'يجب أن تكون الحالة رقمًا.',
+            'images.required' => 'حقل الصورة مطلوب.',
+            'images.image' => 'يجب أن تكون الصورة بتنسيق صورة.',
+            'images.mimes' => 'يجب أن تكون الصورة بامتداد: jpeg، png، jpg، gif.',
+            'images.max' => 'يجب ألا يزيد حجم الصورة عن 2048 كيلوبايت.',
+        ];
     }
 }

@@ -39,4 +39,17 @@ class StorePostRequest extends FormRequest
             'errors' => $validator->errors(),
         ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
     }
+
+    public function messages()
+    {
+        return [
+            'title.required' => 'حقل العنوان مطلوب.',
+            'title.string' => 'يجب أن يكون العنوان نصيًا.',
+            'title.max' => 'يجب ألا يزيد العنوان عن 255 حرفًا.',
+            'body.required' => 'حقل المحتوى مطلوب.',
+            'body.string' => 'يجب أن يكون المحتوى نصيًا.',
+            'product_id.uuid' => 'يجب أن يكون معرف المنتج UUID صحيح.',
+            'product_id.exists' => 'المنتج المحدد غير موجود.',
+        ];
+    }
 }

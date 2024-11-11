@@ -38,4 +38,13 @@ class StoreCategoryRequest extends FormRequest
             'errors' => $validator->errors(),
         ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'حقل الاسم مطلوب.',
+            'name.string' => 'يجب أن يكون الاسم نصيًا.',
+            'name.max' => 'يجب ألا يزيد الاسم عن 255 حرفًا.',
+        ];
+    }
 }

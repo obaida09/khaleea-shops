@@ -38,4 +38,16 @@ class LoginRequest extends FormRequest
             'errors' => $validator->errors(),
         ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
     }
+
+    public function messages()
+    {
+        return [
+            'mobile.required' => 'حقل رقم الجوال مطلوب.',
+            'mobile.string' => 'يجب أن يكون رقم الجوال نصيًا.',
+            'mobile.max' => 'يجب ألا يزيد رقم الجوال عن 255 حرفًا.',
+            'password.required' => 'حقل كلمة المرور مطلوب.',
+            'password.string' => 'يجب أن تكون كلمة المرور نصية.',
+            'password.min' => 'يجب ألا تقل كلمة المرور عن 8 أحرف.',
+        ];
+    }
 }

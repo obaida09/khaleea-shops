@@ -26,7 +26,7 @@ class StoreCommentRequest extends FormRequest
     {
         return [
             'content' => 'required|string',
-            'post_id' => 'required|uuid|exists:posts,id', // Ensure the post exists
+            'post_id' => 'required|uuid|exists:posts,id',
             'parent_id' => 'nullable|uuid|exists:comments,id',
         ];
     }
@@ -38,5 +38,18 @@ class StoreCommentRequest extends FormRequest
             'message' => 'Validation failed',
             'errors' => $validator->errors(),
         ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
+    }
+
+    public function messages()
+    {
+        return [
+            'content.required' => 'حقل المحتوى مطلوب.',
+            'content.string' => 'يجب أن يكون المحتوى نصيًا.',
+            'post_id.required' => 'حقل معرف المنشور مطلوب.',
+            'post_id.uuid' => 'يجب أن يكون معرف المنشور UUID صحيح.',
+            'post_id.exists' => 'المعرف المقدم للمنشور غير موجود.',
+            'parent_id.uuid' => 'يجب أن يكون معرف التعليق UUID صحيح.',
+            'parent_id.exists' => 'المعرف المقدم للتعليق غير موجود.',
+        ];
     }
 }

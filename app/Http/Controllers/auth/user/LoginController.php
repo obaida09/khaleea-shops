@@ -4,6 +4,7 @@ namespace App\Http\Controllers\auth\user;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\user\LoginRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +23,7 @@ class LoginController extends Controller
 
         return response()->json([
             'token' => $token,
-            'user' => Auth::guard('user')->user(),
+            'user' => new UserResource($user),
         ], 200);
     }
 }

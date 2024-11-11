@@ -38,4 +38,12 @@ class UpdateRoleRequest extends FormRequest
             'errors' => $validator->errors(),
         ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
     }
+
+    public function messages()
+    {
+        return [
+            'name.string' => 'يجب أن يكون الاسم نصيًا.',
+            'name.unique' => 'هذا الاسم مستخدم بالفعل.',
+        ];
+    }
 }

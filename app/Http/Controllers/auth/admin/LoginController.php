@@ -23,9 +23,6 @@ class LoginController extends Controller
 
         $token = $admin->createToken('Admin API Token')->accessToken;
 
-        return response()->json([
-            'token' => $token,
-            'data' => $admin
-        ], 200);
+        return response()->json(['token' => $token], 200);
     }
 }
