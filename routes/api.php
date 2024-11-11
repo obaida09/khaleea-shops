@@ -19,10 +19,13 @@ Route::post('/admin/logout', authAdmin\LogoutController::class)->name('admin.log
 Route::post('/shop/register', shop\RegisterController::class)->name('shop.register');
 Route::post('/shop/login', shop\LoginController::class)->name('shop.login');
 // Route::post('/shop/logout', shop\LogoutController::class)->name('shop.logout');
+Route::post('shop/password-reset', [shop\ShopPasswordResetController::class, 'sendResetLink']);
+Route::post('/shop/password-reset/confirm', [shop\ShopPasswordResetController::class, 'resetPassword']);
 
 Route::post('/user/register', user\RegisterController::class)->name('user.register');
 Route::post('/user/login', user\LoginController::class)->name('user.login');
 Route::post('/user/logout', user\LogoutController::class)->name('user.logout');
+Route::post('user/password-reset', [user\UserPasswordResetController::class, 'sendResetLink']);
 
 Route::get('/user/checkToken', user\CheckTokenController::class);
 

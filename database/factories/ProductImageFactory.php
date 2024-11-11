@@ -19,7 +19,7 @@ class ProductImageFactory extends Factory
     {
         return [
             'product_id' => Product::factory(),
-            'image_path' => 'http://127.0.0.1:8000/products/p' . rand(1, 5) . '.jpg',
+            'image_path' => 'http://145.223.117.211/products/p' . rand(1, 5) . '.jpg',
         ];
     }
 }
