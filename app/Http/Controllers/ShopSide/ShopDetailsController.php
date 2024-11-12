@@ -12,8 +12,8 @@ class ShopDetailsController extends Controller
 {
     public function profile()
     {
-       $shop = new ShopResource(Auth::user());
-       return $shop;
+        $shop = new ShopResource(Auth::user());
+        return $shop;
     }
 
     public function updateProfile(UpdateProfileRequest $request)
@@ -22,7 +22,7 @@ class ShopDetailsController extends Controller
         $data = $request->all();
 
         // Add Password to data
-        trim($request->password) != '' ? $data['password'] = bcrypt($request->password):'';
+        trim($request->password) != '' ? $data['password'] = bcrypt($request->password) : '';
         $user->update($data);
 
         return response()->json([

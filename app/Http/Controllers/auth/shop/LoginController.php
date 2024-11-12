@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\auth\shop;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\shop\LoginRequest;
+use App\Http\Requests\ShopSide\LoginRequest;
 use App\Http\Resources\ShopSide\ShopResource;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;

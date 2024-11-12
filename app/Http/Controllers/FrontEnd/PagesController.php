@@ -14,8 +14,9 @@ class PagesController extends Controller
 {
     public function vertical(Request $request)
     {
+        // return ProductResource::collection(Product::with('images')->get());
         // Define total count you want to retrieve per request
-        $totalCount = 10; // Adjust as needed
+        $totalCount = 39; // Adjust as needed
 
         // Calculate how many posts and products to retrieve
         $postsCount = (int) ($totalCount * 0.1); // 10%
@@ -41,13 +42,7 @@ class PagesController extends Controller
             ->take($productsFromKhaleea)
             ->get();
 
-        $products = Product::join('shops', 'products.shop_id', '=', 'shops.id')
-            ->where(function ($query) {
-                $query->whereColumn('products.season', 'shops.season')
-                    ->orWhere('products.season', 'all');
-                    // ->orWhere('shops.season', 'all');
-            })
-            ->where('shop_id', '<>', $khaleeaShop->id)
+        $products = Product::where('shop_id', '<>', $khaleeaShop->id)
             ->with('images')
             ->skip($offsetProducts)
             ->take($productsCount)
@@ -55,6 +50,7 @@ class PagesController extends Controller
 
         $posts = PostResource::collection($posts);
         $products = ProductResource::collection($products);
+        $productsFromKhaleea = ProductResource::collection($productsFromKhaleea);
 
         // Combine the results into a single collection
         $concatProducts = $productsFromKhaleea

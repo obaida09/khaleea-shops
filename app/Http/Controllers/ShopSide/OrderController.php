@@ -22,7 +22,6 @@ class OrderController extends Controller
             $query->where('shop_id', $shop->id);
         })->distinct()->orderBy($sortField, $sortOrder)->paginate(10);
 
-        return $orders;
         return OrderResource::collection($orders);
     }
 }

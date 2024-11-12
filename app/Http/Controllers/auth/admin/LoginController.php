@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\auth\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\shop\LoginRequest;
+use App\Http\Requests\admin\LoginRequest as AdminLoginRequest;
 use App\Models\Admin;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    public function __invoke(LoginRequest $request)
+    public function __invoke(AdminLoginRequest $request)
     {
         $credentials = $request->only('mobile', 'password');
 

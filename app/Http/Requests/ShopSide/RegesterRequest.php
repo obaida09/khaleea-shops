@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Requests\admin;
+namespace App\Http\Requests\ShopSide;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\Rule;
 
-class UpdateProfileRequest extends FormRequest
+class RegesterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,24 +25,10 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|required|string|max:255',
-            'email' => [
-                'sometimes',
-                'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique('admins')->ignore($this->route('user')),
-            ],
-            'mobile' => [
-                'sometimes',
-                'required',
-                'string',
-                'numaric',
-                'max:255',
-                Rule::unique('admins')->ignore($this->route('user')),
-            ],
-            'password' => 'sometimes|required|string|min:8',
+            'name' => 'required|string|max:255',
+            'mobile' => 'required|string|max:255|unique:shops',
+            'email' => 'required|string|email|max:255|unique:shops',
+            'password' => 'required|string|min:8|confirmed',
             'location' => 'nullable',
             'gps' => 'nullable',
         ];
@@ -61,15 +46,19 @@ class UpdateProfileRequest extends FormRequest
     public function messages()
     {
         return [
+            'name.required' => 'حقل الاسم مطلوب.',
             'name.string' => 'يجب أن يكون الاسم نصيًا.',
             'name.max' => 'يجب ألا يزيد الاسم عن 255 حرفًا.',
+            'mobile.required' => 'حقل رقم الجوال مطلوب.',
             'mobile.string' => 'يجب أن يكون رقم الجوال نصيًا.',
             'mobile.max' => 'يجب ألا يزيد رقم الجوال عن 255 حرفًا.',
             'mobile.unique' => 'رقم الجوال مسجل بالفعل.',
+            'email.required' => 'حقل البريد الإلكتروني مطلوب.',
             'email.string' => 'يجب أن يكون البريد الإلكتروني نصيًا.',
             'email.email' => 'يجب أن يكون البريد الإلكتروني صالحًا.',
             'email.max' => 'يجب ألا يزيد البريد الإلكتروني عن 255 حرفًا.',
             'email.unique' => 'البريد الإلكتروني مسجل بالفعل.',
+            'password.required' => 'حقل كلمة المرور مطلوب.',
             'password.string' => 'يجب أن تكون كلمة المرور نصية.',
             'password.min' => 'يجب ألا تقل كلمة المرور عن 8 أحرف.',
         ];

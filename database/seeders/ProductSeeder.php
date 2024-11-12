@@ -21,13 +21,5 @@ class ProductSeeder extends Seeder
                 'product_id' => $product->id, // Associate with the created product
             ]);
         });
-
-        // Attach tags to products
-        // $tags = Tag::all(); // Get all tags
-        // $products->each(function ($product) use ($tags) {
-        //     $productTags = $tags->random(rand(1, 3)); // Randomly assign 1 to 3 tags per product
-        //     $product->tags()->sync($productTags->pluck('id')); // Attach tags to product
-        // });
-
     }
 }

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->decimal('price', 10, 2);
             $table->unsignedBigInteger('quantity')->default(0);
+            $table->json('colors')->nullable();
+            $table->json('sizes')->nullable();
             $table->enum('season', ['winter', 'summer', 'all'])->default('all');
             $table->boolean('status')->default(true);
             $table->timestamps();

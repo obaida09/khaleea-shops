@@ -46,8 +46,9 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
         $validated['shop_id'] = Auth::guard('shop')->user()->id;
+        $validated['colors'] = json_encode($request->colors);
+        $validated['sizes'] = json_encode($request->sizes);
         unset($validated['images']);
-        return $request->all();
 
         $product = Product::create($validated);
 

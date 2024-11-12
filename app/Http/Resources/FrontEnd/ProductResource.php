@@ -27,7 +27,9 @@ class ProductResource extends JsonResource
             'category_id' => $this->category->id,
             'category_name' => $this->category->name,
             'created_at' => $this->created_at->toFormattedDateString(),
-            'images' => $this->whenLoaded('images'),
+            'images' => $this->whenLoaded('images', function () {
+                return $this->images->pluck('image_path');
+            }),
             'posts' => PostResource::collection($this->whenLoaded('posts')),
         ];
     }
