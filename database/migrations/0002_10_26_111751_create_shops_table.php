@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('mobile')->unique();
             $table->string('description')->nullable();
             $table->string('password');
-            $table->enum('season', ['winter', 'summer', 'all'])->default('all');
+            $table->enum('season', ['winter', 'summer'])->default('winter');
             $table->boolean('status')->default(true);
             $table->rememberToken();
             $table->timestamps();

@@ -23,6 +23,7 @@ class ProductFactory extends Factory
             'shop_id' => shop::first()->id,
             'category_id' => Category::first()->id,
             'quantity' => rand(20,200),
+            'season' => $this->faker->randomElement(['winter', 'all', 'summer']),
             'description' => $this->faker->text(200),
             'price' => $this->faker->randomFloat(2, 10, 1000),
         ];

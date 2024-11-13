@@ -26,9 +26,10 @@ class StoreShopRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'mobile' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
+            'mobile' => 'required|string|max:255|unique:shops',
+            'email' => 'required|string|email|max:255|unique:shops',
             'password' => 'required|string|min:8',
+            'season' => 'nullable|string|in:summer,winter',
             'location' => 'nullable',
             'gps' => 'nullable',
         ];

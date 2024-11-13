@@ -44,6 +44,7 @@ class UpdateShopRequest extends FormRequest
                 Rule::unique('shops')->ignore($this->route('shop')),
             ],
             'password' => 'sometimes|required|string|min:8|confirmed',
+            'season' => 'nullable|string|in:summer,winter',
             'location' => 'nullable',
             'gps' => 'nullable',
         ];

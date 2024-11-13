@@ -28,6 +28,7 @@ class RegesterRequest extends FormRequest
             'name' => 'required|string|max:255',
             'mobile' => 'required|string|max:255|unique:shops',
             'email' => 'required|string|email|max:255|unique:shops',
+            'season' => 'nullable|string|in:summer,winter',
             'password' => 'required|string|min:8|confirmed',
             'location' => 'nullable',
             'gps' => 'nullable',

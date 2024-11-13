@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\Request;
+use Illuminate\Database\Query\Builder;
 
 class PagesController extends Controller
 {
@@ -16,7 +17,7 @@ class PagesController extends Controller
     {
         // return ProductResource::collection(Product::with('images')->get());
         // Define total count you want to retrieve per request
-        $totalCount = 39; // Adjust as needed
+        $totalCount = 25; // Adjust as needed
 
         // Calculate how many posts and products to retrieve
         $postsCount = (int) ($totalCount * 0.1); // 10%
@@ -42,7 +43,17 @@ class PagesController extends Controller
             ->take($productsFromKhaleea)
             ->get();
 
-        $products = Product::where('shop_id', '<>', $khaleeaShop->id)
+
+        $products = Product::join('shops', 'shops.id', '=', 'products.shop_id')
+            ->select(
+                'products.*', // Select all columns from the products table
+                'shops.season as shop_season' // Alias the `season` column from the shops table
+            )
+            ->where(function ($query) {
+                $query->whereColumn('shops.season', 'products.season')  // Match the season between shop and product
+                    ->orWhere('products.season', 'all');
+            })
+            ->where('shop_id', '<>', $khaleeaShop->id)
             ->with('images')
             ->skip($offsetProducts)
             ->take($productsCount)
