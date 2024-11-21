@@ -10,6 +10,9 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class ProductController extends Controller
 {
@@ -39,34 +42,62 @@ class ProductController extends Controller
         return ProductResource::collection($products);
     }
 
+    public function create()
+    {
+        return view('products.create');
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreProductRequest $request)
     {
-        $validated = $request->validated();
-        $validated['shop_id'] = Auth::guard('shop')->user()->id;
-        $validated['colors'] = json_encode($request->colors);
-        $validated['sizes'] = json_encode($request->sizes);
-        unset($validated['images']);
+        // Start a transaction
+        DB::beginTransaction();
 
-        $product = Product::create($validated);
+        try {
 
-        // Handle multiple images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $imagePath = $image->storeAs('products',  uniqid() . '_' . $file->getClientOriginalName(),'public');
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_path' => $imagePath,
-                ]);
+            $validated = $request->validated();
+            // $validated['shop_id'] = Auth::guard('shop')->user()->id;
+            $validated['colors'] = json_encode($request->colors);
+            $validated['sizes'] = json_encode($request->sizes);
+            unset($validated['images']);
+
+            $validated['category_id'] = '6cae7c4e-42e3-487a-ba66-a7cf0ba35f4d';
+            $validated['shop_id'] = 'fdf50e03-67ed-4d7a-b54d-5fa5fac8c85e';
+
+            $product = Product::create($validated);
+
+            // Handle multiple images
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $imagePath = $image->storeAs('products',  uniqid() . '_' . $image->getClientOriginalName(), 'public');
+                    ProductImage::create([
+                        'product_id' => $product->id,
+                        'image_path' => $imagePath,
+                    ]);
+                }
             }
-        }
+return $request->file('images');
+            // Commit the transaction
+            DB::commit();
 
-        return response()->json([
-            'data' => new ProductResource($product),
-            'message' => 'Product Created',
-        ], 200);
+            return response()->json([
+                'data' => new ProductResource($product),
+                'message' => 'Product Created',
+            ], 200);
+        } catch (Exception $e) {
+            // Rollback the transaction if an error occurs
+            DB::rollBack();
+
+            // Log the error for debugging
+            Log::error('Product creation failed: ' . $e->getMessage());
+
+            return response()->json([
+                'error' => 'An error occurred while creating the product',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
