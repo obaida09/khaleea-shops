@@ -52,6 +52,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
+        return $request->file('images');
         // Start a transaction
         DB::beginTransaction();
 
@@ -78,7 +79,7 @@ class ProductController extends Controller
                     ]);
                 }
             }
-return $request->file('images');
+
             // Commit the transaction
             DB::commit();
 
