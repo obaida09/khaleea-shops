@@ -22,6 +22,14 @@ class PostResource extends JsonResource
             'product_name' => $this->whenLoaded('product', fn() => $this->product->name),
             'created_at' => $this->created_at->toFormattedDateString(),
             'updated_at' => $this->updated_at->toFormattedDateString(),
+            'images' => $this->whenLoaded('images', function () {
+                return $this->images->map(function ($image) {
+                    return [
+                        'id' => $image->id,
+                        'path' => asset('storage/' . $image->image_path), // Generate the full URL
+                    ];
+                });
+            }),
         ];
     }
 }

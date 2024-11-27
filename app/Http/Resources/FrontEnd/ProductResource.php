@@ -29,7 +29,12 @@ class ProductResource extends JsonResource
             'category_name' => $this->category->name,
             'created_at' => $this->created_at->toFormattedDateString(),
             'images' => $this->whenLoaded('images', function () {
-                return $this->images->pluck('image_path');
+                return $this->images->map(function ($image) {
+                    return [
+                        'id' => $image->id,
+                        'path' => asset('storage/' . $image->image_path), // Generate the full URL
+                    ];
+                });
             }),
             'posts' => PostResource::collection($this->whenLoaded('posts')),
         ];
