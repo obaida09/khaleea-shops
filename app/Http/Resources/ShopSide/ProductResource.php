@@ -25,9 +25,16 @@ class ProductResource extends JsonResource
             'season' => $this->season,
             'category' => $this->category->name,
             'created_at' => $this->created_at->toFormattedDateString(),
-            'images' => $this->whenLoaded('images'),
             'posts' => PostResource::collection($this->whenLoaded('posts')),
             'orders' => OrderResource::collection($this->whenLoaded('orders')),
+            'images' => $this->whenLoaded('images', function () {
+                return $this->images->map(function ($image) {
+                    return [
+                        'id' => $image->id,
+                        'path' => asset('storage/' . $image->image_path), // Generate the full URL
+                    ];
+                });
+            }),
         ];
     }
 }
