@@ -29,8 +29,8 @@ class StoreProductRequest extends FormRequest
             'description' => 'nullable|string',
             'season' => 'required|in:winter,summer,all',
             'price' => 'required|numeric|min:0',
-            'quantity' => 'nullable|numeric',
-            'category_id' => 'nullable|uuid|exists:categories,id',
+            'quantity' => 'required|numeric',
+            'category_id' => 'required|uuid|exists:categories,id',
             'status' => 'nullable|numeric',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
