@@ -12,10 +12,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Traits\ProductImagesUpload;
+use Illuminate\Support\Facades\Storage;
 use Exception;
 
 class ProductController extends Controller
 {
+    use ProductImagesUpload;
 
     public function index(Request $request)
     {
@@ -42,17 +45,11 @@ class ProductController extends Controller
         return ProductResource::collection($products);
     }
 
-    public function create()
-    {
-        return view('products.create');
-    }
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreProductRequest $request)
     {
-        return $request->file('images');
         // Start a transaction
         DB::beginTransaction();
 
@@ -71,13 +68,8 @@ class ProductController extends Controller
 
             // Handle multiple images
             if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $image) {
-                    $imagePath = $image->storeAs('products',  uniqid() . '_' . $image->getClientOriginalName(), 'public');
-                    ProductImage::create([
-                        'product_id' => $product->id,
-                        'image_path' => $imagePath,
-                    ]);
-                }
+                // Use the ProductImagesUpload trait
+                $this->ProductImagesUpload($request->file('images'), $product->id, 'products/' . $product->slug . '/images');
             }
 
             // Commit the transaction
@@ -130,5 +122,81 @@ class ProductController extends Controller
     {
         $product->delete();
         return response()->json(['message' => 'Product Deleted'], 204);
+    }
+
+
+    /**
+     * Delete a specific image for a product.
+     *
+     * @param $productId
+     * @param $imageId
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteImage($productId, $imageId)
+    {
+        // Find the product and the image to delete
+        $product = Product::findOrFail($productId);
+        $image = ProductImage::findOrFail($imageId);
+
+        // Delete the image file from storage
+        Storage::disk('public')->delete($image->image_path);
+
+        // Delete the image record from the database
+        $image->delete();
+
+        return response()->json([
+            'message' => 'Image deleted successfully.',
+        ], 200);
+    }
+
+    /**
+     * Delete all images for a product.
+     *
+     * @param  $productId
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteAllImages($productId)
+    {
+        // Find the product
+        $product = Product::findOrFail($productId);
+
+        // Get all associated images
+        $images = $product->images; // Assuming 'images' is the relationship method
+
+        // Loop through images and delete from storage and database
+        foreach ($images as $image) {
+            Storage::disk('public')->delete($image->image_path);
+            $image->delete();
+        }
+
+        return response()->json([
+            'message' => 'All images deleted successfully.',
+        ], 200);
+    }
+
+    /**
+     * Upload multiple images for a product.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $productId
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadImages(Request $request, int $productId)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'images.*' => 'required|image|array|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Find the product by ID
+        $product = Product::findOrFail($productId);
+
+        // Use the ProductImagesUpload trait
+        $this->ProductImagesUpload($request->file('images'), $product->id, 'products/' . $product->slug . '/images');
+
+        return response()->json([
+            'message' => 'Images uploaded successfully.',
+            'product' => $product,
+        ], 201);
     }
 }

@@ -3,7 +3,7 @@
 use App\Http\Controllers\auth\admin as authAdmin;
 use App\Http\Controllers\auth\shop;
 use App\Http\Controllers\auth\user;
-
+use App\Http\Controllers\ShopSide\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
@@ -29,7 +29,6 @@ Route::post('user/password-reset', [user\UserPasswordResetController::class, 'se
 
 Route::get('/user/checkToken', user\CheckTokenController::class);
 
-
 // Routes for Admin Panel
 require __DIR__.'/admin.php';
 // Routes for Shop Side
@@ -37,4 +36,5 @@ require __DIR__.'/shop.php';
 // Routes for Front end
 require __DIR__.'/frontEnd.php';
 
-
+// ssh root@145.223.117.211
+// cd /var/www/html/khaleea-shops

@@ -6,15 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\FrontEnd\PostResource;
+use App\Models\Admin;
 use App\Models\Post;
-use App\Models\PostImage;
 use App\Models\User;
 use App\Notifications\PostNotification;
+use App\Traits\PostImagesUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+use Exception;
 
 class PostController extends Controller
 {
+    use PostImagesUpload;
+
     public function index(Request $request)
     {
 
@@ -37,34 +44,49 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
-        $validated = $request->validated();
-        $validated['user_id'] = Auth::user()->id;
 
-        $post = Post::create($validated);
+        // Start a transaction
+        DB::beginTransaction();
 
-        // Handle multiple images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $imagePath = $image->store('posts', 'public');
-                // Create PostImage entry
-                PostImage::create([
-                    'post_id' => $post->id,
-                    'image_path' => $imagePath,
-                ]);
+        try {
+            $validated = $request->validated();
+            $validated['user_id'] = Auth::user()->id;
+            unset($validated['images']);
+
+            $post = Post::create($validated);
+
+            // Handle multiple images
+            if ($request->hasFile('images')) {
+                // Use the ImageUpload trait
+                $this->PostImagesUpload($request->file('images'), $post->id,'posts/' . $post->id . '/images');
             }
+
+            // Find all admins with the 'view-posts' permission
+            $admins = Admin::permission('view-products')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new PostNotification($post, 'created'));
+            }
+
+            // Notify the user about the new post
+            $user = auth()->user();
+            $user->notify(new PostNotification($post, 'created'));
+
+            // Commit the transaction
+            DB::commit();
+
+            return new PostResource($post->load(['user', 'product']));
+        } catch (Exception $e) {
+            // Rollback the transaction if an error occurs
+            DB::rollBack();
+
+            // Log the error for debugging
+            Log::error('Product creation failed: ' . $e->getMessage());
+
+            return response()->json([
+                'error' => 'An error occurred while creating the product',
+                'details' => $e->getMessage()
+            ], 500);
         }
-
-        // Find all admins with the 'view-posts' permission
-        $admins = User::permission('view-products')->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new PostNotification($post, 'created'));
-        }
-
-        // Notify the user about the new post
-        $user = auth()->user();
-        $user->notify(new PostNotification($post, 'created'));
-
-        return new PostResource($post->load(['user', 'product']));
     }
 
     public function update(UpdatePostRequest $request, Post $post)

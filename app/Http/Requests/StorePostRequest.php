@@ -28,6 +28,7 @@ class StorePostRequest extends FormRequest
             'title' => 'required|string|max:255',
             'body' => 'required|string',
             'product_id' => 'nullable|uuid|exists:products,id',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
 
@@ -50,6 +51,10 @@ class StorePostRequest extends FormRequest
             'body.string' => 'يجب أن يكون المحتوى نصيًا.',
             'product_id.uuid' => 'يجب أن يكون معرف المنتج UUID صحيح.',
             'product_id.exists' => 'المنتج المحدد غير موجود.',
+            'images.required' => 'حقل الصورة مطلوب.',
+            'images.image' => 'يجب أن تكون الصورة بتنسيق صورة.',
+            'images.mimes' => 'يجب أن تكون الصورة بامتداد: jpeg، png، jpg، gif.',
+            'images.max' => 'يجب ألا يزيد حجم الصورة عن 2048 كيلوبايت.',
         ];
     }
 }

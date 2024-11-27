@@ -29,17 +29,13 @@ class StoreProductRequest extends FormRequest
             'description' => 'nullable|string',
             'season' => 'required|in:winter,summer,all',
             'price' => 'required|numeric|min:0',
-            'quantity' => 'required|numeric',
-            'category_id' => 'required|uuid|exists:categories,id',
-            'status' => 'required|numeric',
-            'images' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'colors' => 'nullable|array',
-            'colors.*' => 'string|max:50',
-            'sizes' => 'nullable|array',
-            'sizes.*' => 'string|max:50',
+            'quantity' => 'nullable|numeric',
+            'category_id' => 'nullable|uuid|exists:categories,id',
+            'status' => 'nullable|numeric',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
-
+    // |image|mimes:jpeg,png,jpg,gif|max:2048
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
@@ -67,7 +63,6 @@ class StoreProductRequest extends FormRequest
             'category_id.required' => 'حقل الفئة مطلوب.',
             'category_id.uuid' => 'يجب أن يكون معرف الفئة UUID صحيحًا.',
             'category_id.exists' => 'الفئة المحددة غير موجودة.',
-            'status.required' => 'حقل الحالة مطلوب.',
             'status.numeric' => 'يجب أن تكون الحالة رقمًا.',
             'images.required' => 'حقل الصورة مطلوب.',
             'images.image' => 'يجب أن تكون الصورة بتنسيق صورة.',

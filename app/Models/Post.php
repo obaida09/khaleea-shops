@@ -12,7 +12,7 @@ class Post extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $fillable = ['user_id', 'product_id', 'title', 'body'];
+    protected $guarded = [];
 
     protected static function boot()
     {

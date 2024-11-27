@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ShopSide\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,3 +19,5 @@ Route::get('routes', function() {
         echo "</tr>";
     echo "</table>";
 });
+
+Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');

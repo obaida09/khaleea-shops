@@ -32,6 +32,7 @@ class UpdateProductRequest extends FormRequest
             'category_id' => 'sometimes|numeric',
             'quantity' => 'sometimes|numeric',
             'status' => 'sometimes|numeric',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
 
