@@ -94,6 +94,7 @@ class PagesController extends Controller
         $postsWithProduct = Post::with('product') // Assuming you have a relationship with Product
             ->whereNotNull('product_id') // Ensure we only get posts with a product ID
             ->skip($offsetWithProduct)
+            ->with('images')
             ->take($postsWithProductCount)
             ->get();
 
@@ -101,6 +102,7 @@ class PagesController extends Controller
         $postsWithoutProduct = Post::with('product') // Assuming you have a relationship with Product
             ->whereNull('product_id') // Ensure we only get posts without a product ID
             ->skip($offsetWithoutProduct)
+            ->with('images')
             ->take($postsWithoutProductCount)
             ->get();
 
