@@ -21,9 +21,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ShopSeeder::class,
             CategorySeeder::class,
-            TagSeeder::class,
-            ProductSeeder::class,
-            CouponSeeder::class,
+            // TagSeeder::class,
+            // ProductSeeder::class,
+            // CouponSeeder::class,
             // ProductImageSeeder::class,
         ]);
     }
