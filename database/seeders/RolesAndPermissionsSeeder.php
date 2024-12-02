@@ -38,9 +38,6 @@ class RolesAndPermissionsSeeder extends Seeder
 
             'manage-orders','view-orders','edit-orders','create-orders','delete-orders',
 
-            'manage-colors','view-colors','edit-colors','create-colors','delete-colors',
-
-            'manage-sizes','view-sizes','edit-sizes','create-sizes','delete-sizes',
         ];
 
         foreach ($permissions as $permission) {
@@ -50,11 +47,11 @@ class RolesAndPermissionsSeeder extends Seeder
             ]);
         }
 
-        $admin = Role::create(['name' => 'admin', 'guard_name' => 'admin']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'admin']);
         Role::create(['name' => 'supervisor', 'guard_name' => 'admin']);
         Role::create(['name' => 'user', 'guard_name' => 'admin']);
 
-        $admin->givePermissionTo(Permission::all());
+        $adminRole->givePermissionTo(Permission::all());
 
         $user = User::factory()->create([
             'name' => 'User',
@@ -77,6 +74,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'password' => Hash::make('obeda2001'),
         ]);
 
-        // $admin->assignRole($admin);
+        $admin->assignRole($adminRole);
     }
 }

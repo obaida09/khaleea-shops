@@ -23,9 +23,9 @@ class ProductResource extends JsonResource
             'quantity' => $this->quantity,
             'category' => $this->category->name,
             'user_name' => $this->whenLoaded('user', fn() => $this->user->name),
-            'colors' => $this->whenLoaded('colors', fn() => $this->colors->pluck('hex_code')),
-            'sizes' => $this->whenLoaded('sizes', fn() => $this->sizes->pluck('name')),
             'status' => $this->status,
+            'colors' => json_decode($this->colors, true),
+            'sizes' => json_decode($this->sizes, true),
             'created_at' => $this->created_at->toFormattedDateString(),
             'updated_at' => $this->updated_at->toFormattedDateString(),
             'images' => $this->whenLoaded('images', function () {

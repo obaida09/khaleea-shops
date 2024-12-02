@@ -14,6 +14,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('admin/tags', Admin\TagController::class);
     Route::apiResource('admin/coupons', Admin\CouponController::class);
     Route::apiResource('admin/orders', Admin\OrderController::class);
+    Route::prefix('admin')->as('admin.')->apiResource('/admin/products', Admin\ProductController::class);
     Route::prefix('admin')->as('admin.')->apiResource('admin/posts', Admin\PostController::class);
 
     Route::get('/permissions', [RoleController::class, 'getPermissions']);

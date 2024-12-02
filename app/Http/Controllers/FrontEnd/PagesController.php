@@ -33,7 +33,12 @@ class PagesController extends Controller
         $offsetProductsFromKhaleea = ($currentPage - 1) * $productsFromKhaleea;
 
         // Fetch posts and products
-        $posts = Post::with('user')->whereNull('product_id')->skip($offsetPosts)->take($postsCount)->get();
+        $posts = Post::with('user')
+            ->whereNull('product_id')
+            ->skip($offsetPosts)
+            ->with('images')
+            ->take($postsCount)
+            ->get();
 
         $khaleeaShop = Shop::whereName('khaleea')->first();
         $productsFromKhaleea = Product::where('shop_id', $khaleeaShop->id)

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\FrontEnd;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FrontEnd\StoreCartRequest;
 use App\Http\Resources\CartResource;
 use App\Models\Cart;
 use App\Models\CartItem;
@@ -25,13 +26,8 @@ class CartController extends Controller
     }
 
     // Add product to cart
-    public function store(Request $request)
+    public function store(StoreCartRequest $request)
     {
-        $request->validate([
-            'product_id' => 'required|uuid|exists:products,id',
-            'quantity' => 'required|integer|min:1',
-        ]);
-
         $product = Product::find($request->product_id);
         $user = Auth::user();
 

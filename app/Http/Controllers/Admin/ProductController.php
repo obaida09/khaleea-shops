@@ -34,7 +34,7 @@ class ProductController extends Controller implements HasMiddleware
         $sortField = $request->input('sort_by', 'id'); // Default sort by 'id'
         $sortOrder = $request->input('sort_order', 'asc'); // Default order 'asc'
 
-        $query = Product::query()->with('user');
+        $query = Product::query()->with('shop');
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -53,42 +53,11 @@ class ProductController extends Controller implements HasMiddleware
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreProductRequest $request)
-    {
-        $validated = $request->validated();
-        $validated['user_id'] = Auth::user()->id;
-
-        $product = Product::create($validated);
-
-        // Handle multiple images
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $imagePath = $image->store('products', 'public');
-                ProductImage::create([
-                    'product_id' => $product->id,
-                    'image_path' => $imagePath,
-                ]);
-            }
-        }
-
-        // Attach Colors and Sizes to Product
-        $product->colors()->attach($validated['colors']);
-        $product->sizes()->attach($validated['sizes']);
-
-        return response()->json([
-            'data' => new ProductResource($product),
-            'message' => 'Product Created',
-        ], 200);
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(Product $product)
     {
-        $product->load(['user', 'images']);
+        $product->load(['shop', 'images', 'posts']);
         return new ProductResource($product);
     }
 
