@@ -50,6 +50,11 @@ class ProductController extends Controller
         ]);
     }
 
+    public function getSavedProducts() {
+        $user =  Auth::guard('user')->user();
+        return ProductResource::collection($user->savedProducts->load('posts', 'images'));
+    }
+
     public function saveProduct(Request $request, $productId)
     {
         $user =  Auth::guard('user')->user();

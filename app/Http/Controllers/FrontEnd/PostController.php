@@ -123,6 +123,12 @@ class PostController extends Controller
         return response()->json(['message' => 'Post deleted successfully']);
     }
 
+    public function getSavedPosts()
+    {
+        $user =  Auth::guard('user')->user();
+        return PostResource::collection($user->savedPosts->load('images'));
+    }
+
     public function savePost(Request $request, $postId)
     {
         $user = Auth::guard('user')->user();
@@ -138,7 +144,7 @@ class PostController extends Controller
 
     public function unsavePost(Request $request, $postId)
     {
-        $user =  Auth::guard('user')->user();
+        $user =  Auth::guard('user')->user
         $post = Post::findOrFail($postId);
 
         // Detach the post from the user’s saved posts if saved

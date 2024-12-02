@@ -105,9 +105,4 @@ class Product extends Model
         return $this->hasMany(ProductRating::class);
     }
 
-    // Method to calculate the average rating
-    public function averageRating()
-    {
-        return $this->ratings()->avg('rating');
-    }
 }

@@ -22,6 +22,7 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'quantity' => $this->quantity,
             'category' => $this->category->name,
+            'rating' => $this->ratings()->avg('rating'),
             'user_name' => $this->whenLoaded('user', fn() => $this->user->name),
             'status' => $this->status,
             'colors' => json_decode($this->colors, true),

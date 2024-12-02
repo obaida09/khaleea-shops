@@ -27,6 +27,7 @@ class ProductResource extends JsonResource
             'shop_name' => $this->shop->name,
             'category_id' => $this->category->id,
             'category_name' => $this->category->name,
+            'rating' => $this->ratings()->avg('rating'),
             'colors' => json_decode($this->colors, true),
             'sizes' => json_decode($this->sizes, true),
             'created_at' => $this->created_at->toFormattedDateString(),

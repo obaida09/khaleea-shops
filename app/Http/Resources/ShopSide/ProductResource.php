@@ -24,6 +24,7 @@ class ProductResource extends JsonResource
             'quantity' => $this->quantity,
             'season' => $this->season,
             'category' => $this->category->name,
+            'rating' => $this->ratings()->avg('rating'),
             'colors' => json_decode($this->colors, true),
             'sizes' => json_decode($this->sizes, true),
             'created_at' => $this->created_at->toFormattedDateString(),
