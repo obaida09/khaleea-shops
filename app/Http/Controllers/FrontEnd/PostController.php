@@ -144,7 +144,7 @@ class PostController extends Controller
 
     public function unsavePost(Request $request, $postId)
     {
-        $user =  Auth::guard('user')->user
+        $user =  Auth::guard('user')->user;
         $post = Post::findOrFail($postId);
 
         // Detach the post from the user’s saved posts if saved
