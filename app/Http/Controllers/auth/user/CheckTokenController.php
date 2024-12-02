@@ -24,7 +24,7 @@ class CheckTokenController extends Controller
                 'user_id' => $user->id,
                 'user_name' => $user->name,
                 // 'admin_role' => $role
-            ], 200);
+            ], 200); 
         }
 
         return response()->json(['message' => 'Token is invalid or expired'], 401);

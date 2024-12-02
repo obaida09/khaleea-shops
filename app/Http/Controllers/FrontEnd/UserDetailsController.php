@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\FrontEnd;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\user\UpdateProfileRequest;
-use App\Http\Resources\FrontEnd\OrderResource;
+use App\Http\Requests\FrontEnd\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
-use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 
 class UserDetailsController extends Controller

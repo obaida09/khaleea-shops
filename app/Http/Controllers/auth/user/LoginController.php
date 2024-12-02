@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\auth\user;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\user\LoginRequest;
+use App\Http\Requests\FrontEnd\LoginRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
