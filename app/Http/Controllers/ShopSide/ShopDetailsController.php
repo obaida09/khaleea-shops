@@ -20,6 +20,11 @@ class ShopDetailsController extends Controller
         $user = Auth::user();
         $data = $request->all();
 
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('shop_image', 'public');
+            $data['image'] = $imagePath;
+        }
+
         // Add Password to data
         trim($request->password) != '' ? $data['password'] = bcrypt($request->password) : '';
         $user->update($data);

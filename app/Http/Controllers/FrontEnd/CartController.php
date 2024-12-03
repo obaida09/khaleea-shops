@@ -4,7 +4,7 @@ namespace App\Http\Controllers\FrontEnd;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FrontEnd\StoreCartRequest;
-use App\Http\Resources\CartResource;
+use App\Http\Resources\FrontEnd\CartResource;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;

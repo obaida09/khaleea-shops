@@ -20,6 +20,11 @@ class UserDetailsController extends Controller
         $user = Auth::user();
         $data = $request->all();
 
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('user_image', 'public');
+            $data['image'] = $imagePath;
+        }
+        return $request->all();
         // Add Password to data
         trim($request->password) != '' ? $data['password'] = bcrypt($request->password):'';
         $user->update($data);

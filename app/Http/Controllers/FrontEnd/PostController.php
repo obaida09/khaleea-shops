@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -110,17 +111,14 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        $images = $post->images;
         $post->delete();
 
-        // Find all admins with the 'view-posts' permission
-        $admins = User::permission('view-products')->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new PostNotification($post, 'deleted'));
+        foreach ($images as $image) {
+            Storage::disk('public')->delete($image->image_path);
+            $image->delete();
         }
 
-        // Notify the user about the new post
-        $user = auth()->user();
-        $user->notify(new PostNotification($post, 'deleted'));
         return response()->json(['message' => 'Post deleted successfully']);
     }
 

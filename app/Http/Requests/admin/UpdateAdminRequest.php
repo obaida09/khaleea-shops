@@ -39,13 +39,10 @@ class UpdateAdminRequest extends FormRequest
                 'sometimes',
                 'required',
                 'string',
-                'numaric',
-                'max:255',
+                'max:15',
                 Rule::unique('admins')->ignore($this->route('admin')),
             ],
             'password' => 'sometimes|required|string|min:8',
-            'location' => 'nullable',
-            'gps' => 'nullable',
         ];
     }
 

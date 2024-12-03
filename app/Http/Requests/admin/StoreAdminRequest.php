@@ -30,8 +30,6 @@ class StoreAdminRequest extends FormRequest
             'mobile' => 'required|string|max:255|unique:admins',
             'email' => 'required|string|email|max:255|unique:admins',
             'password' => 'required|string|min:8',
-            'location' => 'nullable',
-            'gps' => 'nullable',
         ];
     }
 
