@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\auth\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\admin\RegesterRequest;
+use App\Http\Requests\Admin\RegesterRequest;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +28,7 @@ class RegisterController extends Controller
             return response()->json([
                 'token' => $token
             ], 201);
-            
+
         } catch (\Exception $e) {
             // Rollback transaction in case of an error
             DB::rollBack();
