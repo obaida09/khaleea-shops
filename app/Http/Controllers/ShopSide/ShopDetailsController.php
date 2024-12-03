@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ShopSide;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\shop\UpdateProfileRequest;
+use App\Http\Requests\ShopSide\UpdateProfileRequest;
 use App\Http\Resources\ShopSide\ShopResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

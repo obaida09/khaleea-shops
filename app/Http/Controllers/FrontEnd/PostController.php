@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\FrontEnd;
 
+use App\Events\NotificationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
@@ -24,7 +25,6 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
-
         $sortField = $request->input('sort_by', 'id'); // Default sort by 'id'
         $sortOrder = $request->input('sort_order', 'asc'); // Default order 'asc'
 
@@ -44,13 +44,14 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
-
+        $message = "Hello, this is a test notification!";
+        event(new NotificationEvent($message));
         // Start a transaction
         DB::beginTransaction();
 
         try {
             $validated = $request->validated();
-            $validated['user_id'] = Auth::user()->id;
+            $validated['user_id'] = Auth::guard('user')->user()->id;
             unset($validated['images']);
 
             $post = Post::create($validated);

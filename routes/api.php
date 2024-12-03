@@ -3,8 +3,11 @@
 use App\Http\Controllers\auth\admin as authAdmin;
 use App\Http\Controllers\auth\shop;
 use App\Http\Controllers\auth\user;
-use App\Http\Controllers\ShopSide\ProductController;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
+
+Broadcast::routes(['middleware' => ['auth:user']]);
+
 
 Route::get('/login', function () {
     return response()->json([
