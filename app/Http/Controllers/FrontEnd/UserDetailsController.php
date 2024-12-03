@@ -24,7 +24,7 @@ class UserDetailsController extends Controller
             $imagePath = $request->file('image')->store('user_image', 'public');
             $data['image'] = $imagePath;
         }
-        return $request->all();
+
         // Add Password to data
         trim($request->password) != '' ? $data['password'] = bcrypt($request->password):'';
         $user->update($data);

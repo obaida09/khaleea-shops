@@ -44,8 +44,9 @@ class PostNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'post_id' => $this->post->id,
-            'status' => $this->status,
+            // 'post_id' => $this->post->id,
+            // 'status' => $this->status,
+            'message' => 'This is a test broadcast notification.',
         ]);
     }
 

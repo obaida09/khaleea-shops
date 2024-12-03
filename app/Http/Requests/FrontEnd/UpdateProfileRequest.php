@@ -43,7 +43,7 @@ class UpdateProfileRequest extends FormRequest
                 'max:255',
                 Rule::unique('users')->ignore($this->route('user')),
             ],
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
             'password' => 'sometimes|string|min:8',
             'location' => 'nullable',
             'gps' => 'nullable',
