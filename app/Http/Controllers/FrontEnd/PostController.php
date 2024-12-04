@@ -4,8 +4,8 @@ namespace App\Http\Controllers\FrontEnd;
 
 use App\Events\NotificationEvent;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
+use App\Http\Requests\FrontEnd\StorePostRequest;
+use App\Http\Requests\FrontEnd\UpdatePostRequest;
 use App\Http\Resources\FrontEnd\PostResource;
 use App\Models\Admin;
 use App\Models\Post;
@@ -30,14 +30,30 @@ class PostController extends Controller
         $sortOrder = $request->input('sort_order', 'asc'); // Default order 'asc'
 
         $posts = Post::whereUserId(Auth::user()->id)
-            ->with('product')
+            ->with('product', 'images')
             ->orderBy($sortField, $sortOrder)
             ->get();
 
         return PostResource::collection($posts);
     }
 
-    public function show(Post $post)
+    public function show($postId)
+    {
+        $user = Auth::user();
+
+        // Find the post that belongs to the user
+        $post = Post::findOrFail($postId)->where('user_id', $user->id)->first();
+
+        if (!$post) {
+            return response()->json([
+                'message' => 'Post does not belong to the user',
+            ], 200);
+        }
+        $post->load(['product', 'images']);
+        return new PostResource($post);
+    }
+
+    public function publicShow(Post $post)
     {
         $post->load(['product', 'images']);
         return new PostResource($post);
@@ -143,7 +159,7 @@ class PostController extends Controller
 
     public function unsavePost(Request $request, $postId)
     {
-        $user =  Auth::guard('user')->user;
+        $user =  Auth::guard('user')->user();
         $post = Post::findOrFail($postId);
 
         // Detach the post from the user’s saved posts if saved

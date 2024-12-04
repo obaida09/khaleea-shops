@@ -28,7 +28,8 @@ class StorePostRequest extends FormRequest
             'title' => 'required|string|max:255',
             'body' => 'required|string',
             'product_id' => 'nullable|uuid|exists:products,id',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'images' => 'required|array',
+            'images.*'=>'mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
 

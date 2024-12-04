@@ -45,3 +45,5 @@ Route::get('/verticalPage', [FrontEnd\PagesController::class, 'vertical']);
 Route::get('/horizontalPage', [FrontEnd\PagesController::class, 'horizontal']);
 
 Route::get('/product/{slug}', [FrontEnd\ProductController::class, 'show']);
+Route::get('/post/public/{id}', [FrontEnd\PostController::class, 'publicShow']);
+

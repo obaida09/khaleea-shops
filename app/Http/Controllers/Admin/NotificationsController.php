@@ -18,8 +18,8 @@ class NotificationsController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('can:send-message-to-stores', only: ['sendMessageToStores']),
-            new Middleware('can:send-message-to-users', only: ['sendMessageToUsers']),
+            new Middleware('can:send-message-to-stores', only: ['view-products']),
+            new Middleware('can:send-message-to-users', only: ['view-products']),
         ];
     }
 
@@ -28,7 +28,7 @@ class NotificationsController extends Controller implements HasMiddleware
         // Validate the incoming request data
         $request->validate([
             'message' => 'required|string|max:255',
-            'shop_ids' => 'array|uuid|nullable', // Array of specific shop IDs if provided
+            'shop_ids' => 'array|nullable', // Array of specific shop IDs if provided
             'shop_ids.*' => 'nullable|uuid|exists:shops,id',
         ]);
 

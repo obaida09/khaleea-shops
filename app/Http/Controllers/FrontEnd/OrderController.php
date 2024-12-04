@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\FrontEnd;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\FrontEnd\StoreOrderRequest;
 use App\Http\Resources\FrontEnd\OrderResource;
 use App\Models\Admin;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\Shop;
 use App\Models\User;
 use App\Notifications\OrderStatusNotification;
 use Illuminate\Support\Facades\Auth;
@@ -117,34 +116,6 @@ class OrderController extends Controller
             return response()->json(['error' => 'Failed to create order: ' . $e->getMessage()], 500);
         }
     }
-
-
-    public function store2(StoreOrderRequest $request)
-    {
-        $shop = Shop::findOrFail($request->shop_id);
-
-        $order = $shop->orders()->create();
-
-        $totalPrice = 0;
-
-        foreach ($request->products as $productData) {
-            $product = Product::findOrFail($productData['id']);
-            $quantity = $productData['quantity'];
-            $price = $product->price * $quantity;
-            $totalPrice += $price;
-
-            $order->products()->attach($product->id, [
-                'quantity' => $quantity,
-                'price' => $product->price,
-            ]);
-        }
-
-        $order->update(['total_price' => $totalPrice]);
-
-        return new OrderResource($order);
-    }
-
-
 
     public function destroy(Order $order)
     {
