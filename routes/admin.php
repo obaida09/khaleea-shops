@@ -19,6 +19,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     Route::get('/permissions', [RoleController::class, 'getPermissions']);
     // Route::post('/users/{user}/points/add', [Admin\PointController::class, 'addPoints']);
+    Route::get('/admin/notifications', [Admin\NotificationsController::class, 'getAdminNotifications']);
     Route::post('/admin/send-message-to-stores', [Admin\NotificationsController::class, 'sendMessageToStores']);
     Route::post('/admin/send-message-to-users', [Admin\NotificationsController::class, 'sendMessageToUsers']);
 });

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationsController extends Controller implements HasMiddleware
 {
@@ -21,6 +22,12 @@ class NotificationsController extends Controller implements HasMiddleware
             new Middleware('can:send-message-to-stores', only: ['view-products']),
             new Middleware('can:send-message-to-users', only: ['view-products']),
         ];
+    }
+
+    public function getAdminNotifications()
+    {
+        $admin = Auth::guard('admin')->user();
+        return $admin->notifications;
     }
 
     public function sendMessageToStores(Request $request)

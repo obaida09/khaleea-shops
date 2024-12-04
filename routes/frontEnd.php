@@ -5,7 +5,9 @@ use App\Http\Controllers\FrontEnd;
 
 
 
-Route::group(['middleware' => ['auth:user']], function () {
+Route::group(['middleware' => ['auth:user']], function ()
+{
+    Route::get('/user/notifications', [FrontEnd\NotificationsController::class, 'getUserNotifications']);
 
     Route::get('/user/profile', [FrontEnd\UserDetailsController::class, 'profile']);
     Route::put('/user/profile', [FrontEnd\UserDetailsController::class, 'updateProfile']);
@@ -17,6 +19,7 @@ Route::group(['middleware' => ['auth:user']], function () {
 
     Route::prefix('user')->as('user.')->apiResource('user/posts', FrontEnd\PostController::class);
     Route::apiResource('carts', FrontEnd\CartController::class);
+    Route::delete('user/cart/delete/{productId}', [FrontEnd\CartController::class, 'removeItem']);
 
     // List comments and their replies for a post
     Route::get('/posts/comments/{id}', [FrontEnd\CommentController::class, 'index']);

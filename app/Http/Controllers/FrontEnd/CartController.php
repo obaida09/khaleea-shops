@@ -72,6 +72,23 @@ class CartController extends Controller
         return response()->json(['message' => 'Cart item updated'], 200);
     }
 
+    public function removeItem($itemId)
+    {
+        // Assuming the cart is related to the authenticated user
+        $user = Auth::user();
+
+        $cartItem = CartItem::findOrFail($itemId);
+
+        if ($cartItem) {
+            // Delete the cart item
+            $cartItem->delete();
+
+            return response()->json(['message' => 'Item removed from cart.'], 200);
+        }
+
+        return response()->json(['message' => 'Item not found in cart.'], 404);
+    }
+
     // Remove item from cart
     public function destroy($itemId)
     {

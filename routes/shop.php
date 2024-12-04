@@ -5,6 +5,8 @@ use App\Http\Controllers\ShopSide;
 
 Route::group(['middleware' => ['auth:shop']], function () {
 
+    Route::get('/shop/notifications', [ShopSide\NotificationsController::class, 'getShopNotifications']);
+
     Route::get('/shop/categories', [ShopSide\GetCategoryController::class, 'index']);
     Route::get('/shop/profile', [ShopSide\ShopDetailsController::class, 'profile']);
     Route::put('/shop/profile', [ShopSide\ShopDetailsController::class, 'updateProfile']);
