@@ -31,6 +31,10 @@ class StoreProductRequest extends FormRequest
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|numeric',
             'category_id' => 'required|uuid|exists:categories,id',
+            'colors' => 'required|array',
+            'colors.*' => 'string|min:2',
+            'sizes' => 'required|array',
+            'sizes.*' => 'string|min:1',
             'status' => 'nullable|numeric',
             'images' => 'required|array',
             'images.*'=>'mimes:jpeg,png,jpg,gif,svg|max:2048'

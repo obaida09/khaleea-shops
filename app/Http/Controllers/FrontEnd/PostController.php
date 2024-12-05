@@ -92,7 +92,7 @@ class PostController extends Controller
             // Commit the transaction
             DB::commit();
 
-            return new PostResource($post->load(['user', 'product']));
+            return new PostResource($post->load(['user', 'product', 'images']));
         } catch (Exception $e) {
             // Rollback the transaction if an error occurs
             DB::rollBack();

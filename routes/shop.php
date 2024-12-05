@@ -20,4 +20,6 @@ Route::group(['middleware' => ['auth:shop']], function () {
     Route::post('/shop/products/{productId}/images', [ShopSide\ProductController::class, 'uploadImages']);
     // get Orders for shop
     Route::get('/shop/orders', [ShopSide\OrderController::class, 'index']);
+    // Update Order Satus
+    Route::put('/shop/orders/{id}', [ShopSide\OrderController::class, 'update']);
 });

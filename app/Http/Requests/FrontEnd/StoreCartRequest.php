@@ -27,6 +27,8 @@ class StoreCartRequest extends FormRequest
         return [
             'product_id' => 'required|uuid|exists:products,id',
             'quantity' => 'required|integer|min:1',
+            'product_color' => 'required|string|min:1',
+            'product_size' => 'required|string|min:1',
         ];
     }
 

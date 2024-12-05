@@ -30,6 +30,8 @@ class StoreOrderRequest extends FormRequest
             'products.*.id' => 'required|uuid|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
             'coupon_code' => 'nullable|string|exists:coupons,code',
+            'products.*.product_color' => 'required|string|min:1',
+            'products.*.product_size' => 'required|string|min:1',
         ];
     }
 

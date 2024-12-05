@@ -39,5 +39,3 @@ require __DIR__.'/shop.php';
 // Routes for Front end
 require __DIR__.'/frontEnd.php';
 
-// ssh root@145.223.117.211
-// cd /var/www/html/khaleea-shops

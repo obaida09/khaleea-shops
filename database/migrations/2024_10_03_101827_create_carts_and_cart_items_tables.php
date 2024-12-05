@@ -25,6 +25,8 @@ return new class extends Migration
             $table->foreignId('cart_id')->constrained()->onDelete('cascade'); // Links to carts
             $table->uuid('product_id');
             $table->integer('quantity');
+            $table->string('product_color');
+            $table->string('product_size');
             $table->timestamps();
         });
     }

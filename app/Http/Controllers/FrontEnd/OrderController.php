@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FrontEnd\StoreOrderRequest;
 use App\Http\Resources\FrontEnd\OrderResource;
 use App\Models\Admin;
+use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
@@ -51,8 +52,7 @@ class OrderController extends Controller
 
         DB::beginTransaction();
 
-        try
-        {
+        try {
             $orders = [];
 
             foreach ($groupedProducts as $shopId => $products) {
@@ -73,6 +73,8 @@ class OrderController extends Controller
                     $order->products()->attach($product->id, [
                         'quantity' => $quantity,
                         'price' => $product->price,
+                        'product_color' => $productData['product_color'],
+                        'product_size' => $productData['product_size'],
                     ]);
                     $totalPrice += $product->price * $quantity;
                     $product->decrement('quantity', $quantity);
@@ -101,6 +103,9 @@ class OrderController extends Controller
                 $user->notify(new OrderStatusNotification($order, 'created'));
             }
 
+            // Delete cart items for the user
+            Cart::where('user_id', Auth::id())->delete();
+
             // Commit the transaction
             DB::commit();
 
@@ -108,9 +113,7 @@ class OrderController extends Controller
                 'message' => 'Orders created successfully!',
                 'orders' => OrderResource::collection($orders)
             ], 201);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             // Rollback the transaction if something goes wrong
             DB::rollBack();
             return response()->json(['error' => 'Failed to create order: ' . $e->getMessage()], 500);

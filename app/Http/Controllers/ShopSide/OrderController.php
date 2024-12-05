@@ -24,4 +24,10 @@ class OrderController extends Controller
 
         return OrderResource::collection($orders);
     }
+
+    public function update(Request $request)
+    {
+        $shop = Auth::guard('shop')->user();
+
+    }
 }

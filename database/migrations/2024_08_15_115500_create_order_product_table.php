@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('order_product', function (Blueprint $table) {
             $table->id();
             $table->integer('quantity');
+            $table->string('product_color');
+            $table->string('product_size');
             $table->decimal('price', 10, 2);
             $table->timestamps();
 

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('mobile')->unique();
             $table->string('image')->nullable();
             $table->string('description')->nullable();
+            $table->string('location')->nullable();
+            $table->string('gps')->nullable();
             $table->string('password');
             $table->enum('season', ['winter', 'summer'])->default('winter');
             $table->boolean('status')->default(true);
