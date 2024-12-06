@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://your-frontend-team-url.com'],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
