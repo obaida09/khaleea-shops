@@ -41,7 +41,10 @@ class ProductController extends Controller
             $query->where('price', '<=', $request->price_max);
         }
 
-        $products = $query->orderBy($sortField, $sortOrder)->whereStatus(1)->paginate(10);
+        $products = $query->orderBy($sortField, $sortOrder)
+            ->whereStatus(1)
+            ->with('images')
+            ->paginate(10);
         return ProductResource::collection($products);
     }
 
